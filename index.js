@@ -27,7 +27,7 @@ async function run() {
     await wait(parseInt(ms));
     core.info((new Date()).toTimeString());
 
-    core.setOutput('time', new Date().toTimeString());
+    core.setOutput('time', resp);
   } catch (error) {
     core.setFailed(error.message);
   }
