@@ -2705,6 +2705,14 @@ module.exports = wait;
 
 /***/ }),
 
+/***/ 716:
+/***/ ((module) => {
+
+module.exports = eval("require")("@actions/github");
+
+
+/***/ }),
+
 /***/ 357:
 /***/ ((module) => {
 
@@ -2836,7 +2844,7 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(186);
 const wait = __nccwpck_require__(258);
-
+const github = __nccwpck_require__(716)
 
 // most @actions toolkit packages have async methods
 async function run() {
@@ -2844,11 +2852,24 @@ async function run() {
     const ms = core.getInput('milliseconds');
     core.info(`Waiting ${ms} milliseconds ...`);
 
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const repoOwner = github.context.repo.owner
+    const repo = github.context.repo.repo
+
+    let client = github.getOctokit(core.getInput('token'))
+    let resp = client.rest.pulls.list({
+      owner: repoOwner,
+      repo: repo,
+    }).catch(
+      e => {
+        core.setFailed(e.message)
+      }
+    );
+
     await wait(parseInt(ms));
+    core.debug('resp', resp);
     core.info((new Date()).toTimeString());
 
-    core.setOutput('time', new Date().toTimeString());
+    core.setOutput('time', resp);
   } catch (error) {
     core.setFailed(error.message);
   }
