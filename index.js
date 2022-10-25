@@ -1,31 +1,31 @@
-const core = require('@actions/core');
-const wait = require('./wait');
-const github = require('@actions/github')
 
-// most @actions toolkit packages have async methods
+
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import { updateBranch } from './update-branch';
+
+// This should be a token with access to your repository scoped in as a secret.
+const githubToken = core.getInput('githubToken');
+const octokit = new github.GitHub(githubToken);
+const context = github.context;
+
+const repoOwner = github.context.repo.owner
+const repo = github.context.repo.repo
+
+
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    core.info(`Waiting ${ms} milliseconds ...`);
+    const branch = core.getInput('branch');
+    const force = !!core.getInput('force');
 
-    const repoOwner = github.context.repo.owner
-    const repo = github.context.repo.repo
+    core.debug(JSON.stringify(octokit));
 
-    let client = github.getOctokit(core.getInput('token'))
-    let resp = client.rest.pulls.list({
-      owner: repoOwner,
-      repo: repo,
-    }).catch(
-      e => {
-        core.setFailed(e.message)
-      }
-    );
+    const res = await updateBranch({ octokit, ...context, branch, force });
 
-    await wait(parseInt(ms));
-    core.debug('resp', resp);
-    core.info((new Date()).toTimeString());
+    if (res) {
+      core[res.type](res.msg);
+    }
 
-    core.setOutput('time', resp);
   } catch (error) {
     core.setFailed(error.message);
   }
