@@ -21,10 +21,8 @@ async function run() {
       }
     );
 
-    core.debug(resp);
-
-    core.debug((new Date()).toTimeString()); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
     await wait(parseInt(ms));
+    core.debug('resp', resp);
     core.info((new Date()).toTimeString());
 
     core.setOutput('time', resp);
