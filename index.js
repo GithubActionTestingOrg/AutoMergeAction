@@ -12,8 +12,9 @@ const repo = github.context.repo.repo
 
 async function run() {
   try {
-    const branch = getOldestBranch();
+    const branch = await getOldestBranch();
 
+    core.debug(branch);
     const res = await updateBranch({  ...context, branch });
 
     if (res) {
@@ -24,7 +25,6 @@ async function run() {
     core.setFailed(error.message);
   }
 }
-
 
 
 function getOldestBranch() {
@@ -42,6 +42,7 @@ function getOldestBranch() {
     const sortedPrByDate = resp.sort((a, b) => {
          return Date.parse(a) > Date.parse(b);
     });
+    core.debug(sortedPrByDate);
   
     const oldestPr = sortedPrByDate[0];
   
