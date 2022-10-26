@@ -29469,6 +29469,18 @@ module.exports = require("zlib");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -29506,97 +29518,101 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
-// ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
-var core = __nccwpck_require__(2186);
-// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
-var github = __nccwpck_require__(5438);
-;// CONCATENATED MODULE: ./update-branch.js
-async function updateBranch({
-    octokit,
-    branch,
-    ref,
-    repo,
-    sha,
-    force = false,
-  }) {
-    // Ignore pushes on the destination branch (otherwise, it would update the branch twice)
-    if (ref === `refs/heads/${branch}`) {
-      return {
-        type: 'warning',
-        msg: 'Commit is already on the destination branch, ignoring',
-      };
-    }
-  
-    // If action runs on a tag (on: release), check if the commit is the head of at least one protected branch
-    // It ensure that the release uses a safe commit
-    if (ref.startsWith('refs/tags/')) {
-      const { data: heads } = await octokit.repos.listBranchesForHeadCommit({
-        ...repo,
-        commit_sha: sha,
-      });
-  
-      if (!heads.length) {
-        return {
-          type: 'warning',
-          msg: 'Tag isn\'t head of any branches',
-        };
-      }
-  
-      if (!heads.find(value => value.protected)) {
-        return {
-          type: 'warning',
-          msg: 'A tag was pushed but isn\'t head of a protected branch, skipping',
-        };
-      }
-    }
-  
-    await octokit.git.updateRef({
-      ...repo,
-      sha: sha,
-      ref: `heads/${branch}`,
-      force,
-    });
-  
-    return null;
-  }
-;// CONCATENATED MODULE: ./index.js
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
+/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
+/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
 
 
+const githubToken = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('githubToken');
+const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub(githubToken);
+const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
 
-// This should be a token with access to your repository scoped in as a secret.
-const githubToken = core.getInput('githubToken');
-const octokit = new github.GitHub(githubToken);
-const context = github.context;
-
-const repoOwner = github.context.repo.owner
-const repo = github.context.repo.repo
-
+const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner
+const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo
 
 async function run() {
   try {
-    const branch = core.getInput('branch');
-    const force = !!core.getInput('force');
+    const branch = getOldestBranch();
 
-    core.debug(JSON.stringify(octokit));
-
-    const res = await updateBranch({ octokit, ...context, branch, force });
+    const res = await updateBranch({  ...context, branch });
 
     if (res) {
-      core[res.type](res.msg);
+      _actions_core__WEBPACK_IMPORTED_MODULE_0__[res.type](res.msg);
     }
 
   } catch (error) {
-    core.setFailed(error.message);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
   }
 }
 
+
+
+function getOldestBranch() {
+  let client = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token'))
+  
+    let resp = client.rest.pulls.list({
+      owner: repoOwner,
+      repo: repo,
+    }).catch(
+      e => {
+        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(e.message)
+      }
+    );
+
+    const sortedPrByDate = resp.sort((a, b) => {
+         return Date.parse(a) > Date.parse(b);
+    });
+  
+    const oldestPr = sortedPrByDate[0];
+  
+    return oldestPr;
+}
+
+
+async function updateBranch({
+  branch,
+  ref,
+  repo,
+  sha,
+}) {
+  if (ref === `refs/heads/${branch}`) {
+    return {
+      type: 'warning',
+      msg: 'Commit is already on the destination branch, ignoring',
+    };
+  }
+
+  if (ref.startsWith('refs/tags/')) {
+    const { data: heads } = await octokit.repos.listBranchesForHeadCommit({
+      ...repo,
+      commit_sha: sha,
+    });
+
+    if (!heads.find(value => value.protected)) {
+      return {
+        type: 'warning',
+        msg: 'A tag was pushed but isn\'t head of a protected branch, skipping',
+      };
+    }
+  }
+
+  await octokit.git.updateRef({
+    ...repo,
+    sha: sha,
+    ref: `heads/${branch}`,
+  });
+
+  return null;
+}
+
+
 run();
+
 })();
 
 module.exports = __webpack_exports__;
