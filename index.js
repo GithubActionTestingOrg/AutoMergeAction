@@ -39,6 +39,7 @@ function getOldestBranch() {
       }
     );
     core.debug(`client + ${client}`);
+    console.log(`client + ${resp}`);
   
     core.debug(`resp + ${resp}`);
     console.log(`resp + ${resp}`);
