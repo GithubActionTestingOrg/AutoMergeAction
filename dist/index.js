@@ -29537,8 +29537,9 @@ const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo
 
 async function run() {
   try {
-    const branch = getOldestBranch();
+    const branch = await getOldestBranch();
 
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`branch + ${branch}`);
     const res = await updateBranch({  ...context, branch });
 
     if (res) {
@@ -29549,7 +29550,6 @@ async function run() {
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
   }
 }
-
 
 
 function getOldestBranch() {
@@ -29563,10 +29563,15 @@ function getOldestBranch() {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(e.message)
       }
     );
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`client + ${client}`);
+  
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`resp + ${resp}`);
 
     const sortedPrByDate = resp.sort((a, b) => {
          return Date.parse(a) > Date.parse(b);
     });
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`sortedPr + ${sortedPrByDate}`);
+    console.log(`sortedPr + ${sortedPrByDate}`);
   
     const oldestPr = sortedPrByDate[0];
   
