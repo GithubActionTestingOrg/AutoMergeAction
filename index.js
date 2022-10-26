@@ -14,7 +14,7 @@ async function run() {
   try {
     const branch = await getOldestBranch();
 
-    core.debug(branch);
+    core.debug(`branch + ${branch}`);
     const res = await updateBranch({  ...context, branch });
 
     if (res) {
@@ -38,11 +38,14 @@ function getOldestBranch() {
         core.setFailed(e.message)
       }
     );
+    core.debug(`client + ${client}`);
+  
+    core.debug(`resp + ${resp}`);
 
     const sortedPrByDate = resp.sort((a, b) => {
          return Date.parse(a) > Date.parse(b);
     });
-    core.debug(sortedPrByDate);
+    core.debug(`sortedPr + ${sortedPrByDate}`);
   
     const oldestPr = sortedPrByDate[0];
   
