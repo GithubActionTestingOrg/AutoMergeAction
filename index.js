@@ -41,6 +41,7 @@ function getOldestBranch() {
     core.debug(`client + ${client}`);
   
     core.debug(`resp + ${resp}`);
+    console.log(`resp + ${resp}`);
 
     const sortedPrByDate = resp.sort((a, b) => {
          return Date.parse(a) > Date.parse(b);
