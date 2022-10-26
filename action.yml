@@ -1,20 +1,5 @@
-name: "Update git branch"
-description: "Update a branch to a specific ref"
-inputs:
-    branch:
-        description: "Branch updated by this action"
-        required: true
-    force:
-        description: "Whether to use -f flag to update the branch"
-        default: 0
-    githubToken:
-        description: "Repo's Github token"
-        required: true
+name: "Hello World"
+description: "Greet someone and record the time"
 runs:
-    using: "node12"
-    env:
-        NODE_OPTIONS: '--require "./.pnp.js"'
+    using: "node16"
     main: "dist/index.js"
-branding:
-    icon: "fast-forward"
-    color: "red"
