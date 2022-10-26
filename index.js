@@ -46,6 +46,7 @@ function getOldestBranch() {
          return Date.parse(a) > Date.parse(b);
     });
     core.debug(`sortedPr + ${sortedPrByDate}`);
+    console.log(`sortedPr + ${sortedPrByDate}`);
   
     const oldestPr = sortedPrByDate[0];
   

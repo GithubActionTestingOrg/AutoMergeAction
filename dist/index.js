@@ -29571,6 +29571,7 @@ function getOldestBranch() {
          return Date.parse(a) > Date.parse(b);
     });
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`sortedPr + ${sortedPrByDate}`);
+    console.log(`sortedPr + ${sortedPrByDate}`);
   
     const oldestPr = sortedPrByDate[0];
   
