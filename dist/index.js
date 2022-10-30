@@ -29445,18 +29445,6 @@ module.exports = require("zlib");
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -29491,64 +29479,55 @@ module.exports = require("zlib");
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438)
+const githubToken = core.getInput('githubToken');
+const octokit = new github.GitHub(githubToken);
+const context = github.context;
 
-
-
-
-
-const githubToken = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('githubToken');
-const octokit = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub(githubToken);
-const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
-
-const repoOwner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner
-const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo
+const repoOwner = github.context.repo.owner
+const repo = github.context.repo.repo
 
 async function run() {
   try {
     const branch = await getOldestBranch();
 
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`branch + ${branch}`);
+    core.debug(`branch + ${branch}`);
     const res = await updateBranch({  ...context, branch });
 
     if (res) {
-      _actions_core__WEBPACK_IMPORTED_MODULE_0__[res.type](res.msg);
+      core[res.type](res.msg);
     }
 
   } catch (error) {
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
+    core.setFailed(error.message);
   }
 }
 
 
 function getOldestBranch() {
-  let client = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(_actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token'))
+  let client = github.getOctokit(core.getInput('token'))
   
     let resp = client.rest.pulls.list({
       owner: repoOwner,
       repo: repo,
     }).catch(
       e => {
-        _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(e.message)
+        core.setFailed(e.message)
       }
     );
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`client + ${client}`);
+    core.debug(`client + ${client}`);
     console.log(`client + ${resp}`);
   
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`resp + ${resp}`);
+    core.debug(`resp + ${resp}`);
     console.log(`resp + ${resp}`);
 
     const sortedPrByDate = resp.sort((a, b) => {
          return Date.parse(a) > Date.parse(b);
     });
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(`sortedPr + ${sortedPrByDate}`);
+    core.debug(`sortedPr + ${sortedPrByDate}`);
     console.log(`sortedPr + ${sortedPrByDate}`);
   
     const oldestPr = sortedPrByDate[0];

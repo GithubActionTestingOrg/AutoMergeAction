@@ -1,6 +1,5 @@
-import * as core from '@actions/core';
-import * as github from '@actions/github';
-
+const core = require('@actions/core');
+const github = require('@actions/github')
 const githubToken = core.getInput('githubToken');
 const octokit = new github.GitHub(githubToken);
 const context = github.context;
