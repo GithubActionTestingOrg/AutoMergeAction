@@ -20,12 +20,12 @@
 		"@actions/github": "^1.1.0",
 		"@actions/io": "^1.0.1",
 		"@actions/tool-cache": "^1.1.2",
-		"semver": "^6.3.0"
+		"semver": "^7.3.8"
 	},
 	"devDependencies": {
 		"@vercel/ncc": "^0.31.1",
 		"@types/node": "^12.7.12",
-		"@types/semver": "^6.0.2",
+		"@types/semver": "^7.3.13",
 		"typescript": "^3.6.4"
 	}
 }
