@@ -29542,7 +29542,7 @@ async function main() {
         return Date.parse(a) > Date.parse(b);
     });
     
-    console.log(sortedPrByDate);
+    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(sortedPrByDate);
     
     await Promise.resolve(
             client.pulls.updateBranch({

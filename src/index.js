@@ -17,7 +17,7 @@ async function main() {
         return Date.parse(a) > Date.parse(b);
     });
     
-    console.log(sortedPrByDate);
+    core.debug(sortedPrByDate);
     
     await Promise.resolve(
             client.pulls.updateBranch({
