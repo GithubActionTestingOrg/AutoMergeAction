@@ -1,31 +1,18 @@
 {
-	"name": "javascript-action",
-	"version": "1.0.0",
-	"description": "JavaScript Action Template",
+	"name": "pr-updater",
+	"version": "1.0.1",
+	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"prepare": "ncc build index.js -o dist",
-		"all": "npm run && npm run prepare"
+		"build": "ncc build -o bin src/index.js"
 	},
-	"keywords": [
-		"GitHub",
-		"Actions",
-		"JavaScript"
-	],
-	"author": "",
 	"license": "MIT",
 	"dependencies": {
-		"@actions/core": "^1.1.3",
-		"@actions/exec": "^1.0.1",
-		"@actions/github": "^1.1.0",
-		"@actions/io": "^1.0.1",
-		"@actions/tool-cache": "^1.1.2",
-		"semver": "^6.3.0"
+		"@actions/core": "^1.2.0",
+		"@actions/github": "^1.1.0"
 	},
 	"devDependencies": {
-		"@vercel/ncc": "^0.31.1",
-		"@types/node": "^12.7.12",
-		"@types/semver": "^6.0.2",
-		"typescript": "^3.6.4"
+		"@vercel/ncc": "^0.34.0",
+		"prettier": "^1.18.2"
 	}
 }

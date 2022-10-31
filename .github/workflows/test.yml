@@ -1,11 +1,13 @@
-name: "action-test"
+name: PR update
+
 on: [push, pull_request]
 
 jobs:
-    test:
+    autoupdate:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: GithubActionTastingOrg/AutoMergeAction@main
-              env:
-                  GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+            - uses: actions/checkout@v1
+            - name: update all prs
+              uses: ./
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
