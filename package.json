@@ -4,7 +4,7 @@
 	"description": "JavaScript Action Template",
 	"main": "index.js",
 	"scripts": {
-		"prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
+		"prepare": "ncc build index.js -o dist",
 		"all": "npm run && npm run prepare"
 	},
 	"keywords": [
