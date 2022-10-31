@@ -62,7 +62,7 @@ async function updateBranch({
   if (ref === `refs/heads/${branch}`) {
     return {
       type: 'warning',
-      msg: 'Commit is already on the destination branch, ignoring',
+      msg: 'Commit is already on the destination branch',
     };
   }
 
@@ -75,7 +75,7 @@ async function updateBranch({
     if (!heads.find(value => value.protected)) {
       return {
         type: 'warning',
-        msg: 'A tag was pushed but isn\'t head of a protected branch, skipping',
+        msg: 'A tag was pushed but isn\'t head of a protected branch',
       };
     }
   }
