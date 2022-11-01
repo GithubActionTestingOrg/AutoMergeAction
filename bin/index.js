@@ -12008,14 +12008,15 @@ async function main() {
     );
 
     console.log('filteredPrs', filteredPrs);
-    
-    await Promise.resolve(
-            octokit.rest.pulls.update({
-                owner: repoOwner,
-                repo: repo,
-                pull_number: filteredPrs[0].number,
-            })
-    )
+    try { 
+        octokit.rest.pulls.update({
+            owner: repoOwner,
+            repo: repo,
+            pull_number: filteredPrs[0].number,
+        })
+    } catch (error) {
+        console.warn('error', error)
+    }  
 }
 
 main();
