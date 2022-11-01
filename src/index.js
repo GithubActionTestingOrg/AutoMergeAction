@@ -15,6 +15,12 @@ async function main() {
 
     console.log(prs)
     
+    // const pullsResponse = await client.pulls.list({
+    //     ...github.context.repo,
+    //     base: baseBranch,
+    //     state: 'open',
+    // })
+    // const prs = pullsResponse.data
 
     // const sortedPrByDate = prs.sort((a, b) => {
     //     return Date.parse(a) > Date.parse(b);
