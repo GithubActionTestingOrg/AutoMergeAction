@@ -7,7 +7,7 @@ const baseBranch = github.context.payload.ref
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 
- const getPrs = async () => {
+ const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
@@ -21,29 +21,23 @@ const repo = github.context.repo.repo
 
 async function main() {
 
-    const prs = await getPrs();
+    const pullRequestsList = await getPullRequests();
 
-    const filteredPrs = prs.data
+    const filteredPrs = pullRequestsList.data
         .filter((pr) => pr.auto_merge !== null)
         .sort((a, b) => {
             return Date.parse(b.created_at) - Date.parse(a.created_at);
         }
     );
 
-    const sortedPrByDate = filteredPrs.reverse();
-
-    filteredPrs.map((a) => console.log(`${a.head.label}`, a.created_at));
-    sortedPrByDate.map((a) => console.log(`${a.head.label}`, a.created_at));
-
     console.log('filteredPrs', filteredPrs);
     
-
-    // await Promise.resolve(
-    //         octokit.pulls.updateBranch({
-    //             ...github.context.repo,
-    //             pull_number: sortedPrByDate[0].number,
-    //         })
-    // )
+    await Promise.resolve(
+            octokit.pulls.updateBranch({
+                ...github.context.repo,
+                pull_number: filteredPrs[0].number,
+            })
+    )
 }
 
 main();
