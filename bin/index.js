@@ -12006,14 +12006,18 @@ async function main() {
             return Date.parse(b.created_at) - Date.parse(a.created_at);
         }
     );
-
+    if (!filteredPrs.length) {
+        console.log('automerge prs is not found');
+        return
+    }
+    
     try { 
         await octokit.request(
             'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
             {
               owner: repoOwner,
               repo: repo,
-              pull_number:  filteredPrs[0].number,
+              pull_number: filteredPrs[0].number,
             }
         ).then(() => {console.log('updated', filteredPrs[0].number)})
         
