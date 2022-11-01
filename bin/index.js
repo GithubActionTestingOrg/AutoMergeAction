@@ -9694,7 +9694,7 @@ const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 
  const getPrs = async () => {
-    const {data: resp} = octokit.rest.pulls.list({
+    const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
     }).catch(
@@ -9703,8 +9703,8 @@ const repo = github.context.repo.repo
         }
      )
     return resp;
-     
 }
+
 async function main() {
 
     const prs = await getPrs();
