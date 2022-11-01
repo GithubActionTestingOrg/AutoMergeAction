@@ -32,16 +32,14 @@ async function main() {
         }
     );
 
-    console.log('filteredPrs', filteredPrs);
-    
     try { 
-        octokit.rest.pulls.update({
+        await octokit.rest.pulls.update({
             owner: repoOwner,
             repo: repo,
             pull_number: filteredPrs[0].number,
-        })
+        });
     } catch (error) {
-        console.warn('error', error)
+        console.warn('error', error);
     }  
 }
 
