@@ -9692,6 +9692,8 @@ async function main() {
     const token = core.getInput('token');
     const octokit = new github.getOctokit(token);
     const baseBranch = github.context.payload.ref
+    const repoOwner = github.context.repo.owner
+    const repo = github.context.repo.repo
 
     let resp = octokit.rest.pulls.list({
         owner: repoOwner,
