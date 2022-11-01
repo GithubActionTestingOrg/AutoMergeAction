@@ -9687,14 +9687,13 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 
+const token = core.getInput('token');
+const octokit = new github.getOctokit(token);
+const baseBranch = github.context.payload.ref
+const repoOwner = github.context.repo.owner
+const repo = github.context.repo.repo
 
-async function main() {
-    const token = core.getInput('token');
-    const octokit = new github.getOctokit(token);
-    const baseBranch = github.context.payload.ref
-    const repoOwner = github.context.repo.owner
-    const repo = github.context.repo.repo
-
+ const getPrs = async () => {
     let resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
@@ -9702,8 +9701,14 @@ async function main() {
         e => {
             core.setFailed(e.message)
         }
-    )
+     )
+    return resp;
+     
+}
+async function main() {
 
+    const prs = await getPrs();
+    console.log('prs', prs);
     // const sortedPrByDate = prs.sort((a, b) => {
     //     return Date.parse(a) > Date.parse(b);
     // });
@@ -9714,7 +9719,6 @@ async function main() {
     //             pull_number: sortedPrByDate[0].number,
     //         })
     // )
-    console.log('resp', resp);
 }
 
 main();
