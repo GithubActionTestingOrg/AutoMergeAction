@@ -24,10 +24,9 @@ async function main() {
     const prs = await getPrs();
 
     const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
-    console.log('filteredPrs', filteredPrs);
 
-    const sortedPrByDate = filteredPrs.sort((a, b) => {
-        return Date.parse(a.created_at) - Date.parse(b.created_at);
+    const sortedPrByDate = filteredPrs.sort((a,b) => {
+        return Date.parse(b.created_at) - Date.parse(a.created_at);
     });
     console.log('sortedPrByDate', sortedPrByDate);
     
