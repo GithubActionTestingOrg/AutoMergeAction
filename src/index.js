@@ -1,32 +1,47 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { Octokit } = require("@octokit/rest");
 
+const token = core.getInput('token');
+// const octokit = new github.getOctokit(token);
+const octokit = new Octokit({ auth: token });
+const baseBranch = github.context.payload.ref
+const repoOwner = github.context.repo.owner
+const repo = github.context.repo.repo
+
+ const getPullRequests = async () => {
+    const resp = octokit.rest.pulls.list({
+        owner: repoOwner,
+        repo: repo,
+    }).catch(
+        e => {
+            core.setFailed(e.message)
+        }
+     )
+    return resp;
+}
 
 async function main() {
-    const token = core.getInput('token');
-    const octokit = new github.getOctokit(token);
-    const baseBranch = github.context.payload.ref
 
-    const { data: prs } = await octokit.rest.pulls.list({
-        ...github.context.repo,
-        base: baseBranch,
-        state: 'open',
-    });
+    const pullRequestsList = await getPullRequests();
 
-    console.log(prs)
-    // })
-    // const prs = pullsResponse.data
+    const filteredPrs = pullRequestsList.data
+        .filter((pr) => pr.auto_merge !== null)
+        .sort((a, b) => {
+            return Date.parse(b.created_at) - Date.parse(a.created_at);
+        }
+    );
 
-    // const sortedPrByDate = prs.sort((a, b) => {
-    //     return Date.parse(a) > Date.parse(b);
-    // });
-    
-    // await Promise.resolve(
-    //         client.pulls.updateBranch({
-    //             ...github.context.repo,
-    //             pull_number: sortedPrByDate[0].number,
-    //         })
-    // )
+    try { 
+        await octokit.rest.pulls.update({
+            owner: repoOwner,
+            repo: repo,
+            pull_number: filteredPrs[0].number,
+            body: {},
+        }).then(() => {console.log('updated', filteredPrs[0].number)});
+    } catch (error) {
+        console.warn('error', error);
+    }  
 }
 
 main();
