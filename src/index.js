@@ -40,7 +40,7 @@ async function main() {
             body: {},
         }).then(() => {console.log('updated', filteredPrs[0].number)});
     } catch (error) {
-        console.warn('error', error);
+        console.warn('error1', error);
     }  
 }
 
