@@ -9711,13 +9711,12 @@ async function main() {
 
     const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
 
-
     const sortedPrByDate = filteredPrs.sort((a, b) => {
         return Date.parse(b.created_at) - Date.parse(a.created_at);
-    });
+    }).reverse();
 
     filteredPrs.map((a) => console.log(`${a.head.label}`, a.created_at));
-    sortedPrByDate.reverse().map((a) => console.log(`${a.head.label}`, a.created_at));
+    sortedPrByDate.map((a) => console.log(`${a.head.label}`, a.created_at));
 
     console.log('sortedPrByDate', sortedPrByDate);
     
