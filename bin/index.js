@@ -9715,6 +9715,8 @@ async function main() {
         return Date.parse(a.created_at) - Date.parse(b.created_at);
     }).reverse();
     console.log('sortedPrByDate', sortedPrByDate);
+
+    console.log('date', Date.parse(filteredPrs[0].created_at));
     
     // await Promise.resolve(
     //         octokit.pulls.updateBranch({
