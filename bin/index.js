@@ -9719,7 +9719,7 @@ async function main() {
     console.log('filteredPrs', filteredPrs);
     
     await Promise.resolve(
-            octokit.pulls.updateBranch({
+            octokit.pulls.update({
                 ...github.context.repo,
                 pull_number: filteredPrs[0].number,
             })
