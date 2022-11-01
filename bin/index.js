@@ -9713,7 +9713,7 @@ async function main() {
     console.log('filteredPrs', filteredPrs);
 
     const sortedPrByDate = filteredPrs.sort((a, b) => {
-        return Date.parse(a) > Date.parse(b);
+        return Date.parse(b) > Date.parse(a);
     });
     console.log('sortedPrByDate', sortedPrByDate);
     
