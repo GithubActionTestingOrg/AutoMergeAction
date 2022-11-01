@@ -27,7 +27,7 @@ async function main() {
     console.log('filteredPrs', filteredPrs);
 
     const sortedPrByDate = filteredPrs.sort((a, b) => {
-        return Date.parse(b.created_at) > Date.parse(a.created_at);
+        return Date.parse(a.created_at) - Date.parse(b.created_at);
     });
     console.log('sortedPrByDate', sortedPrByDate);
     
