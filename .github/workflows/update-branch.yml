@@ -22,7 +22,6 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   requiredLabels: auto-merge
-                  requiredApprovals: 1
                   requiredStatusChecks: |
                       build_pr
                       WIP
