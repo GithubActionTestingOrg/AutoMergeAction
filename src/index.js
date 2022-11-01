@@ -22,7 +22,10 @@ const repo = github.context.repo.repo
 async function main() {
 
     const prs = await getPrs();
-    console.log('prs', prs);
+
+    const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
+    console.log('filteredPrs', filteredPrs);
+    console.log('prs', prs.data);
     // const sortedPrByDate = prs.sort((a, b) => {
     //     return Date.parse(a) > Date.parse(b);
     // });
