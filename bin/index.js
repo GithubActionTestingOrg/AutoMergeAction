@@ -9699,25 +9699,17 @@ async function main() {
         state: 'open',
     });
 
-    console.log(octokit.rest.pulls)
+    const sortedPrByDate = prs.sort((a, b) => {
+        return Date.parse(a) > Date.parse(b);
+    });
     
-    // const pullsResponse = await client.pulls.list({
-    //     ...github.context.repo,
-    //     base: baseBranch,
-    //     state: 'open',
-    // })
-    // const prs = pullsResponse.data
-
-    // const sortedPrByDate = prs.sort((a, b) => {
-    //     return Date.parse(a) > Date.parse(b);
-    // });
-    
-    // await Promise.resolve(
-    //         client.pulls.updateBranch({
-    //             ...github.context.repo,
-    //             pull_number: sortedPrByDate[0].number,
-    //         })
-    // )
+    await Promise.resolve(
+            octokit.pulls.updateBranch({
+                ...github.context.repo,
+                pull_number: sortedPrByDate[0].number,
+            })
+    )
+    console.log('sortedPrByDate', sortedPrByDate);
 }
 
 main();
