@@ -37,6 +37,7 @@ async function main() {
             owner: repoOwner,
             repo: repo,
             pull_number: filteredPrs[0].number,
+            body: {},
         });
     } catch (error) {
         console.warn('error', error);
