@@ -29471,18 +29471,6 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -29517,36 +29505,37 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
-__nccwpck_require__.r(__webpack_exports__);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(2186);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
 
-
-
-const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('token')
-const client = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub(token)
 
 async function main() {
-    // const baseBranch = github.context.payload.ref
-    // const pullsResponse = await client.pulls.list({
-        // ...github.context.repo,
-        // base: baseBranch,
-        // state: 'open',
-    // })
-    console.log(client);
+    const token = core.getInput('token');
+    const octokit = new github.getOctokit(token);
+    const baseBranch = github.context.payload.ref
 
+    const { data: prs } = await octokit.rest.pulls.list({
+        ...github.context.repo,
+        base: baseBranch,
+        state: 'open',
+    });
+
+    console.log(prs)
+    
+    // const pullsResponse = await client.pulls.list({
+    //     ...github.context.repo,
+    //     base: baseBranch,
+    //     state: 'open',
+    // })
     // const prs = pullsResponse.data
 
     // const sortedPrByDate = prs.sort((a, b) => {
-        // return Date.parse(a) > Date.parse(b);
+    //     return Date.parse(a) > Date.parse(b);
     // });
-    // console.log(sortedPrByDate);
-     // await Promise.resolve(
+    
+    // await Promise.resolve(
     //         client.pulls.updateBranch({
     //             ...github.context.repo,
     //             pull_number: sortedPrByDate[0].number,
