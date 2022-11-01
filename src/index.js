@@ -36,6 +36,7 @@ async function main() {
             octokit.pulls.update({
                 ...github.context.repo,
                 pull_number: filteredPrs[0].number,
+                allow_update_branch: true,
             })
     )
 }
