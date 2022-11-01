@@ -1,8 +1,10 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { Octokit } = require("octokit");
 
 const token = core.getInput('token');
-const octokit = new github.getOctokit(token);
+// const octokit = new github.getOctokit(token);
+const octokit = new Octokit({ auth: token });
 const baseBranch = github.context.payload.ref
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
@@ -33,10 +35,10 @@ async function main() {
     console.log('filteredPrs', filteredPrs);
     
     await Promise.resolve(
-            octokit.pulls.update({
-                ...github.context.repo,
+            octokit.rest.pulls.update({
+                owner: repoOwner,
+                repo: repo,
                 pull_number: filteredPrs[0].number,
-                allow_update_branch: true,
             })
     )
 }
