@@ -8,6 +8,6 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
-              uses: GithubActionTastingOrg/AutoMergeAction@v1.5
+              uses: ./
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
