@@ -18,8 +18,6 @@ async function main() {
         return Date.parse(a) > Date.parse(b);
     });
     
-    core.debug(sortedPrByDate);
-    
     await Promise.resolve(
             client.pulls.updateBranch({
                 ...github.context.repo,

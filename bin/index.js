@@ -29543,8 +29543,6 @@ async function main() {
         return Date.parse(a) > Date.parse(b);
     });
     
-    _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug(sortedPrByDate);
-    
     await Promise.resolve(
             client.pulls.updateBranch({
                 ..._actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo,
