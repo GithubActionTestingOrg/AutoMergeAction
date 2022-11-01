@@ -1,31 +1,37 @@
-import * as core from '@actions/core'
-import * as github from '@actions/github'
-import { Octokit, App } from "octokit";
+const core = require('@actions/core');
+const github = require('@actions/github');
 
-const token = core.getInput('token')
-const client = new github.GitHub(token)
 
 async function main() {
+    const token = core.getInput('token');
+    const octokit = new github.getOctokit(token);
     const baseBranch = github.context.payload.ref
-    const pullsResponse = await client.pulls.list({
+
+    const { data: prs } = await octokit.rest.pulls.list({
         ...github.context.repo,
         base: baseBranch,
         state: 'open',
-    })
-    const prs = pullsResponse.data
-
-    const sortedPrByDate = prs.sort((a, b) => {
-        return Date.parse(a) > Date.parse(b);
     });
+
+    console.log(prs)
     
-    core.debug(sortedPrByDate);
+    // const pullsResponse = await client.pulls.list({
+    //     ...github.context.repo,
+    //     base: baseBranch,
+    //     state: 'open',
+    // })
+    // const prs = pullsResponse.data
+
+    // const sortedPrByDate = prs.sort((a, b) => {
+    //     return Date.parse(a) > Date.parse(b);
+    // });
     
-    await Promise.resolve(
-            client.pulls.updateBranch({
-                ...github.context.repo,
-                pull_number: sortedPrByDate[0].number,
-            })
-    )
+    // await Promise.resolve(
+    //         client.pulls.updateBranch({
+    //             ...github.context.repo,
+    //             pull_number: sortedPrByDate[0].number,
+    //         })
+    // )
 }
 
 main();
