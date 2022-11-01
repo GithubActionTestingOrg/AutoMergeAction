@@ -32,7 +32,7 @@ async function main() {
         }
     );
     if (!filteredPrs.length) {
-        console.log('automerge prs is not found');
+        console.log('auto-merge prs is not found');
         return
     }
     
