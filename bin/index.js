@@ -9711,9 +9711,9 @@ async function main() {
 
     const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
 
-    const sortedPrByDate = filteredPrs.sort((a,b) => {
-        return Date.parse(b.created_at) - Date.parse(a.created_at);
-    });
+    const sortedPrByDate = filteredPrs.sort((a, b) => {
+        return Date.parse(a.created_at) - Date.parse(b.created_at);
+    }).reverse();
     console.log('sortedPrByDate', sortedPrByDate);
     
     // await Promise.resolve(
