@@ -33,12 +33,21 @@ async function main() {
     );
 
     try { 
-        await octokit.rest.pulls.update({
-            owner: repoOwner,
-            repo: repo,
-            pull_number: filteredPrs[0].number,
-            body: {},
-        }).then(() => {console.log('updated', filteredPrs[0].number)});
+        await octokit.request(
+            'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
+            {
+              owner: repoOwner,
+              repo: repo,
+              pull_number:  filteredPrs[0].number,
+            }
+        ).then(() => {console.log('updated', filteredPrs[0].number)})
+        
+        // await octokit.rest.pulls.update({
+        //     owner: repoOwner,
+        //     repo: repo,
+        //     pull_number: filteredPrs[0].number,
+        //     body: {},
+        // }).then(() => {console.log('updated', filteredPrs[0].number)});
     } catch (error) {
         console.warn('error', error);
     }  
