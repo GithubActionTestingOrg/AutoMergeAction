@@ -9713,10 +9713,12 @@ async function main() {
 
     const sortedPrByDate = filteredPrs.sort((a, b) => {
         return Date.parse(a.created_at) - Date.parse(b.created_at);
-    }).reverse();
-    console.log('sortedPrByDate', sortedPrByDate);
+    });
+    console.log('sortedPrByDate', sortedPrByDate.reverse());
 
     console.log('date', Date.parse(filteredPrs[0].created_at));
+    console.log('date2', Date.parse(filteredPrs[1].created_at));
+
     
     // await Promise.resolve(
     //         octokit.pulls.updateBranch({
