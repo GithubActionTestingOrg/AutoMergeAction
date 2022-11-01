@@ -25,10 +25,11 @@ async function main() {
 
     const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
     console.log('filteredPrs', filteredPrs);
-    console.log('prs', prs.data);
-    // const sortedPrByDate = prs.sort((a, b) => {
-    //     return Date.parse(a) > Date.parse(b);
-    // });
+
+    const sortedPrByDate = filteredPrs.sort((a, b) => {
+        return Date.parse(a) > Date.parse(b);
+    });
+    console.log('sortedPrByDate', sortedPrByDate);
     
     // await Promise.resolve(
     //         octokit.pulls.updateBranch({
