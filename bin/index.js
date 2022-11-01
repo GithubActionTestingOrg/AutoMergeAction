@@ -9699,7 +9699,7 @@ async function main() {
         state: 'open',
     });
 
-    console.log(prs)
+    console.log(octokit.rest.pulls)
     
     // const pullsResponse = await client.pulls.list({
     //     ...github.context.repo,
