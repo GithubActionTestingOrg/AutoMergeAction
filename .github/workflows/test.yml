@@ -6,7 +6,7 @@ jobs:
     autoupdate:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3s
+            - uses: actions/checkout@v3
             - name: update all prs
               uses: ./
               with:
