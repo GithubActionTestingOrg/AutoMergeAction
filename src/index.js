@@ -7,23 +7,26 @@ async function main() {
     const octokit = new github.getOctokit(token);
     const baseBranch = github.context.payload.ref
 
-    const { data: prs } = await octokit.rest.pulls.list({
-        ...github.context.repo,
-        base: baseBranch,
-        state: 'open',
-    });
-
-    const sortedPrByDate = prs.sort((a, b) => {
-        return Date.parse(a) > Date.parse(b);
-    });
-    
-    await Promise.resolve(
-            octokit.pulls.updateBranch({
-                ...github.context.repo,
-                pull_number: sortedPrByDate[0].number,
-            })
+    let resp = client.rest.pulls.list({
+        owner: repoOwner,
+        repo: repo,
+    }).catch(
+        e => {
+            core.setFailed(e.message)
+        }
     )
-    console.log('sortedPrByDate', sortedPrByDate);
+
+    // const sortedPrByDate = prs.sort((a, b) => {
+    //     return Date.parse(a) > Date.parse(b);
+    // });
+    
+    // await Promise.resolve(
+    //         octokit.pulls.updateBranch({
+    //             ...github.context.repo,
+    //             pull_number: sortedPrByDate[0].number,
+    //         })
+    // )
+    console.log('resp', resp);
 }
 
 main();
