@@ -38,7 +38,7 @@ async function main() {
             repo: repo,
             pull_number: filteredPrs[0].number,
             body: {},
-        });
+        }).then(() => {console.log('updated', filteredPrs[0].number)});
     } catch (error) {
         console.warn('error', error);
     }  
