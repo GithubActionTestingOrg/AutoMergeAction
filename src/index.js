@@ -35,7 +35,7 @@ async function main() {
     filteredPrs.map((a) => console.log(`${a.head.label}`, a.created_at));
     sortedPrByDate.map((a) => console.log(`${a.head.label}`, a.created_at));
 
-    console.log('sortedPrByDate', sortedPrByDate);
+    console.log('filteredPrs', filteredPrs);
     
 
     // await Promise.resolve(
