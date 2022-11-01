@@ -8,7 +8,7 @@ const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 
  const getPrs = async () => {
-    let resp = octokit.rest.pulls.list({
+    const {data: resp} = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
     }).catch(
