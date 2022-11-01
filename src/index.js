@@ -7,7 +7,7 @@ async function main() {
     const octokit = new github.getOctokit(token);
     const baseBranch = github.context.payload.ref
 
-    let resp = client.rest.pulls.list({
+    let resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
     }).catch(
