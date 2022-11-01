@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import { Octokit, App } from "octokit";
 
 const token = core.getInput('token')
 const client = new github.GitHub(token)
