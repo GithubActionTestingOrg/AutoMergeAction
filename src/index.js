@@ -23,11 +23,14 @@ async function main() {
 
     const prs = await getPrs();
 
-    const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
+    const filteredPrs = prs.data
+        .filter((pr) => pr.auto_merge !== null)
+        .sort((a, b) => {
+            return Date.parse(b.created_at) - Date.parse(a.created_at);
+        }
+    );
 
-    const sortedPrByDate = filteredPrs.sort((a, b) => {
-        return Date.parse(b.created_at) - Date.parse(a.created_at);
-    }).reverse();
+    const sortedPrByDate = filteredPrs.reverse();
 
     filteredPrs.map((a) => console.log(`${a.head.label}`, a.created_at));
     sortedPrByDate.map((a) => console.log(`${a.head.label}`, a.created_at));
