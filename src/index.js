@@ -13,7 +13,6 @@ async function main() {
         state: 'open',
     });
 
-    console.log(prs)
     
     // const pullsResponse = await client.pulls.list({
     //     ...github.context.repo,
