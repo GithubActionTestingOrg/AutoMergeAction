@@ -25,17 +25,17 @@ async function main() {
 
     const filteredPrs = prs.data.filter((pr) => pr.auto_merge !== null);
 
-    filteredPrs.map((a) => console.log(`${a.head.label}`, a.created_at));
 
     const sortedPrByDate = filteredPrs.sort((a, b) => {
         return Date.parse(b.created_at) - Date.parse(a.created_at);
     });
+
+    filteredPrs.map((a) => console.log(`${a.head.label}`, a.created_at));
+    sortedPrByDate.map((a) => console.log(`${a.head.label}`, a.created_at));
+
     console.log('sortedPrByDate', sortedPrByDate);
-
-    console.log('date', Date.parse(filteredPrs[0].created_at));
-    console.log('date2', Date.parse(filteredPrs[1].created_at));
-
     
+
     // await Promise.resolve(
     //         octokit.pulls.updateBranch({
     //             ...github.context.repo,
