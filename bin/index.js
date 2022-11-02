@@ -11994,6 +11994,31 @@ const repo = github.context.repo.repo
     return resp;
 }
 
+
+const updateBranch = async () => { 
+    if (github.context.ref === `refs/heads/${branch}`) {
+        return {
+          type: 'warning',
+          msg: 'Commit is already on the destination branch, ignoring',
+        };
+    }
+    
+    try { 
+        await octokit.request(
+            'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
+            {
+                owner: repoOwner,
+                repo: repo,
+                pull_number: filteredPrs[0].number,
+            }
+        ).then(() => {
+            console.log('updated', filteredPrs[0].number)
+        });
+    } catch (error) {
+        console.warn('error', error);
+    }  
+}
+
 async function main() {
 
     const pullRequestsList = await getPullRequests();
@@ -12011,22 +12036,13 @@ async function main() {
         console.log('auto-merge prs is not found');
         return
     }
+
     console.log(filteredPrs);    
-    try { 
-        await octokit.request(
-            'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
-            {
-                owner: repoOwner,
-                repo: repo,
-                pull_number: filteredPrs[0].number,
-            }
-        ).then(() => {
-            console.log('updated', filteredPrs[0].number)
-        });
-    } catch (error) {
-        console.warn('error', error);
-    }  
+
+    updateBranch();
 }
+
+
 
 main();
 })();

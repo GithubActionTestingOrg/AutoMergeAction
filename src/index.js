@@ -19,24 +19,15 @@ const repo = github.context.repo.repo
     return resp;
 }
 
-async function main() {
 
-    const pullRequestsList = await getPullRequests();
-
-    const filteredPrs = pullRequestsList.data
-        .filter((pr) => pr.auto_merge !== null)
-        .sort((a, b) => {
-            return Date.parse(b.created_at) - Date.parse(a.created_at);
-        })
-        .reverse();
-
-    filteredPrs.map((pr) => { console.log(`${pr.number} ${pr.created_at}`)})
-
-    if (!filteredPrs.length) {
-        console.log('auto-merge prs is not found');
-        return
+const updateBranch = async () => { 
+    if (github.context.ref === `refs/heads/${branch}`) {
+        return {
+          type: 'warning',
+          msg: 'Commit is already on the destination branch, ignoring',
+        };
     }
-    console.log(filteredPrs);    
+    
     try { 
         await octokit.request(
             'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
@@ -52,5 +43,29 @@ async function main() {
         console.warn('error', error);
     }  
 }
+
+async function main() {
+    const pullRequestsList = await getPullRequests();
+
+    const filteredPrs = pullRequestsList.data
+        .filter((pr) => pr.auto_merge !== null)
+        .sort((a, b) => {
+            return Date.parse(b.created_at) - Date.parse(a.created_at);
+        })
+        .reverse();
+
+    filteredPrs.map((pr) => { console.log(`${pr.number} ${pr.created_at}`)})
+
+    if (!filteredPrs.length) {
+        console.log('auto-merge prs is not found');
+        return
+    }
+
+    console.log(filteredPrs);    
+
+    updateBranch();
+}
+
+
 
 main();
