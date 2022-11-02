@@ -11979,7 +11979,6 @@ const { Octokit } = __nccwpck_require__(5375);
 
 const token = core.getInput('token');
 const octokit = new Octokit({ auth: token });
-const baseBranch = github.context.payload.ref
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 
