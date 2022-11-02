@@ -50,7 +50,7 @@ async function main() {
             console.log('updated', filteredPrs[0].number)
         });
     } catch (error) {
-        console.warn('error', error);
+        console.warn('error2', error);
     }  
 }
 
