@@ -11978,7 +11978,6 @@ const github = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(5375);
 
 const token = core.getInput('token');
-// const octokit = new github.getOctokit(token);
 const octokit = new Octokit({ auth: token });
 const baseBranch = github.context.payload.ref
 const repoOwner = github.context.repo.owner
@@ -12004,16 +12003,27 @@ async function main() {
         .filter((pr) => pr.auto_merge !== null)
         .sort((a, b) => {
             return Date.parse(b.created_at) - Date.parse(a.created_at);
-        }
-    );
+        })
+        .reverse();
 
+    filteredPrs.map((pr) => { console.log(`${pr.number} ${pr.created_at}`)})
+
+    if (!filteredPrs.length) {
+        console.log('auto-merge prs is not found');
+        return
+    }
+    console.log(filteredPrs);    
     try { 
-        await octokit.rest.pulls.update({
-            owner: repoOwner,
-            repo: repo,
-            pull_number: filteredPrs[0].number,
-            body: {},
-        }).then(() => {console.log('updated', filteredPrs[0].number)});
+        await octokit.request(
+            'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
+            {
+                owner: repoOwner,
+                repo: repo,
+                pull_number: filteredPrs[0].number,
+            }
+        ).then(() => {
+            console.log('updated', filteredPrs[0].number)
+        });
     } catch (error) {
         console.warn('error', error);
     }  
