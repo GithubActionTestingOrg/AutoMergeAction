@@ -11988,7 +11988,7 @@ const getPullRequests = async () => {
         owner: repoOwner,
         repo: repo,
         sort: 'long-running',
-        direction: 'asc',
+        direction: 'desc',
     }).catch(
         e => {
             core.setFailed(e.message)
@@ -12031,7 +12031,6 @@ const updateBranch = async (filteredPrs) => {
 
 async function main() {
     const pullRequestsList = await getPullRequests();
-    console.log('pullRequestsList', pullRequestsList.data);
     const filteredPrs = pullRequestsList.data
         .filter((pr) => pr.auto_merge !== null)
         .sort((a, b) => {
