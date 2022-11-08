@@ -11996,9 +11996,9 @@ const getPullRequests = async () => {
 
 const testFunction = async () => {
     const query = `
-    query openPullRequests($owner: String!, $repo: String!, $after: String, $baseRefName: String) { 
+    query openPullRequests($owner: String!, $repo: String!, $baseRefName: String) { 
       repository(owner:$owner, name: $repo) { 
-        pullRequests(first: 100, after: $after, states: OPEN, baseRefName: $baseRefName) {
+        pullRequests(first: 100, states: OPEN, baseRefName: $baseRefName) {
           nodes {
             mergeable
             number
