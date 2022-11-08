@@ -12004,21 +12004,24 @@ const updateBranch = async (filteredPrs) => {
             msg: 'Commit is already on the destination branch, ignoring',
         };
     }
+    filteredPrs.map(async (pr) => {
+        try {
+            await octokit.request(
+                'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
+                {
+                    owner: repoOwner,
+                    repo: repo,
+                    pull_number: pr.number,
+                }
+            ).then(() => {
+                console.log('updated', filteredPrs[0].number);
+                return;
+            });
+        } catch (error) {
+            console.warn('error', error);
+        }
+    })
     
-    try {
-        await octokit.request(
-            'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
-            {
-                owner: repoOwner,
-                repo: repo,
-                pull_number: filteredPrs[0].number,
-            }
-        ).then(() => {
-            console.log('updated', filteredPrs[0].number)
-        });
-    } catch (error) {
-        console.warn('error', error);
-    }
 };
 
 async function main() {
@@ -12031,14 +12034,7 @@ async function main() {
         });
     console.log(filteredPrs);
 
-    const {data: files} = await octokit.rest.pulls.listFiles({
-        owner: repoOwner,
-        repo: repo,
-        pull_number: filteredPrs[0].number,
-    });
-    console.log('files', files);
-
-    filteredPrs.map((pr) => { console.log(`${pr.number} ${pr.created_at}`)})
+    filteredPrs.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
 
     if (!filteredPrs.length) {
         console.log('auto-merge prs is not found');
