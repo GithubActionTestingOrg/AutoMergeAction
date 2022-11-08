@@ -11994,7 +11994,8 @@ const getPullRequests = async () => {
     return resp;
 };
 
-const testFunction = async () => {
+const testFunction = async ({context}) => {
+    const { after } = context;
     const query = `
     query openPullRequests($owner: String!, $repo: String!, $after: String, $baseRefName: String) { 
       repository(owner:$owner, name: $repo) { 
@@ -12073,7 +12074,7 @@ async function main() {
     }
 
     // if (filteredPrs.error) console.log(filteredPrs);  
-    testFunction();
+    testFunction({...context});
     // updateBranch();
 };
 
