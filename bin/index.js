@@ -29526,42 +29526,6 @@ const getPullRequests = async () => {
     return resp;
 };
 
-const testFunction = async () => {
-    const query = `
-    query openPullRequests($owner: String!, $repo: String!, $after: String, $baseRefName: String) { 
-      repository(owner:$owner, name: $repo) { 
-        pullRequests(first: 100, after: $after, states: OPEN, baseRefName: $baseRefName) {
-          nodes {
-            mergeable
-            number
-            permalink
-            title
-            updatedAt
-            labels(first: 100) {
-              nodes {
-                name
-              }
-            }
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-          }
-        }
-      }
-    }`;
-
-    const pullsResponse = await octokit.request(query, {
-        headers: {},
-        after,
-        baseRefName: 'main',
-        owner: repoOwner,
-        repo: repo,
-    });
-
-    console.log('query', pullsResponse);
-
-};
 
 const updateBranch = async () => {
     if (github.context.ref === `refs/heads/${branch}`) {
@@ -29605,8 +29569,8 @@ async function main() {
     }
 
     // if (filteredPrs.error) console.log(filteredPrs);  
-    testFunction();
-    // updateBranch();
+    // testFunction();
+    updateBranch();
 };
 
 
