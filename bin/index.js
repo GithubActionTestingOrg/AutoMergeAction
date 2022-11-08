@@ -11994,6 +11994,7 @@ const getPullRequests = async () => {
             core.setFailed(e.message)
         }
     )
+    console.log('resp', resp);
     return resp;
 };
 
@@ -12041,12 +12042,9 @@ async function main() {
         console.log('auto-merge prs is not found');
         return
     }
-
     if (filteredPrs.error) console.log(filteredPrs.error);  
     updateBranch(filteredPrs);
 };
-
-
 
 main();
 })();
