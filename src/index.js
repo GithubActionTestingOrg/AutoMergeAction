@@ -29,7 +29,7 @@ const updateBranch = async (filteredPrs) => {
             msg: 'Commit is already on the destination branch, ignoring',
         };
     }
-    filteredPrs.map(async (pr) => {
+    filteredPrs.some(async (pr) => {
         console.log('ref', github.context.ref);
         try {
             // await octokit.request(
