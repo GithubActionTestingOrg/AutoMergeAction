@@ -19,6 +19,7 @@ const getPullRequests = async () => {
             core.setFailed(e.message)
         }
     )
+    console.log('resp', resp);
     return resp;
 };
 
