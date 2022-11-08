@@ -11995,7 +11995,7 @@ const getPullRequests = async () => {
 };
 
 const updateBranch = async () => {
-    if (github.context.ref === `refs/heads/${branch}`) {
+    if (github.context.ref === `refs/heads/${baseBranch}`) {
         return {
             type: 'warning',
             msg: 'Commit is already on the destination branch, ignoring',
