@@ -12031,11 +12031,7 @@ const updateBranch = async (filteredPrs) => {
 
 async function main() {
     const pullRequestsList = await getPullRequests();
-    const filteredPrs = pullRequestsList.data
-        .filter((pr) => pr.auto_merge !== null)
-        .sort((a, b) => {
-            return Date.parse(b.created_at) - Date.parse(a.created_at);
-        });
+    const filteredPrs = pullRequestsList.data.filter((pr) => pr.auto_merge !== null);
 
     filteredPrs.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
 
