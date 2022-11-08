@@ -55,8 +55,8 @@ async function main() {
             return Date.parse(b.created_at) - Date.parse(a.created_at);
         });
     console.log(filteredPrs);
-    
-    const files = octokit.rest.pulls.listFiles({
+
+    const {data: files} = await octokit.rest.pulls.listFiles({
         owner: repoOwner,
         repo: repo,
         pull_number: filteredPrs[0].number,
