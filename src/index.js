@@ -44,7 +44,7 @@ const testFunction = async () => {
       }
     }`;
 
-    const pullsResponse = await client.graphql(query, {
+    const pullsResponse = await octokit.graphql(query, {
 		headers: {},
 		after,
 		baseRefName: 'main',
