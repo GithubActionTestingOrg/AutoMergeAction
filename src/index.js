@@ -15,7 +15,7 @@ const getPullRequests = async () => {
         repo: repo,
         state: 'open',
     });
-    const promises = openedPrs.map(o => octokit.pulls.listFiles({
+    const promises = prAllList.map(o => octokit.pulls.listFiles({
         owner,
         repo,
         pull_number: o.number,
