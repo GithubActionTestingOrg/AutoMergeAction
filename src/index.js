@@ -47,7 +47,7 @@ const testFunction = async () => {
     const pullsResponse = await client.graphql(query, {
 		headers: {},
 		after,
-		baseRefName,
+		baseRefName: 'main',
 		owner: repoOwner,
 		repo: repo,
 	});
