@@ -6,6 +6,7 @@ const token = core.getInput('token');
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
+const baseBranch = github.context.payload.ref
 
 const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
