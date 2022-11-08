@@ -46,7 +46,8 @@ const updateBranch = async (filteredPrs) => {
                 owner: repoOwner,
                 repo: repo,
                 pull_number: pr.number,
-              });
+            });
+            console.log('updated', pr.number);
         } catch (error) {
             console.warn('error', error);
         }
@@ -61,7 +62,6 @@ async function main() {
         .sort((a, b) => {
             return Date.parse(b.created_at) - Date.parse(a.created_at);
         });
-    console.log(filteredPrs);
 
     filteredPrs.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
 
