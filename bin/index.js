@@ -11994,8 +11994,7 @@ const getPullRequests = async () => {
     return resp;
 };
 
-const testFunction = async ({context}) => {
-    const { after } = context;
+const testFunction = async () => {
     const query = `
     query openPullRequests($owner: String!, $repo: String!, $after: String, $baseRefName: String) { 
       repository(owner:$owner, name: $repo) { 
@@ -12022,7 +12021,6 @@ const testFunction = async ({context}) => {
 
     const pullsResponse = await octokit.request(query, {
         headers: {},
-        after,
         baseRefName: 'main',
         owner: repoOwner,
         repo: repo,
@@ -12074,7 +12072,7 @@ async function main() {
     }
 
     // if (filteredPrs.error) console.log(filteredPrs);  
-    testFunction({...context});
+    testFunction();
     // updateBranch();
 };
 
