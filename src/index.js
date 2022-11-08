@@ -20,7 +20,7 @@ const getPullRequests = async () => {
     return resp;
 };
 
-const updateBranch = async () => {
+const updateBranch = async (filteredPrs) => {
     if (github.context.ref === `refs/heads/${baseBranch}`) {
         return {
             type: 'warning',
@@ -62,7 +62,7 @@ async function main() {
     }
 
     if (filteredPrs.error) console.log(filteredPrs.error);  
-    updateBranch();
+    updateBranch(filteredPrs);
 };
 
 
