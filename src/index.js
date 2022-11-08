@@ -7,7 +7,7 @@ const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 
- const getPullRequests = async () => {
+const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
@@ -15,9 +15,9 @@ const repo = github.context.repo.repo
         e => {
             core.setFailed(e.message)
         }
-     )
+    )
     return resp;
- }
+};
 
 const testFunction = async () => {
     const query = `
@@ -45,26 +45,26 @@ const testFunction = async () => {
     }`;
 
     const pullsResponse = await octokit.graphql(query, {
-		headers: {},
-		after,
-		baseRefName: 'main',
-		owner: repoOwner,
-		repo: repo,
-	});
+        headers: {},
+        after,
+        baseRefName: 'main',
+        owner: repoOwner,
+        repo: repo,
+    });
 
     console.log('query', pullsResponse);
 
- }
+};
 
-const updateBranch = async () => { 
+const updateBranch = async () => {
     if (github.context.ref === `refs/heads/${branch}`) {
         return {
-          type: 'warning',
-          msg: 'Commit is already on the destination branch, ignoring',
+            type: 'warning',
+            msg: 'Commit is already on the destination branch, ignoring',
         };
     }
     
-    try { 
+    try {
         await octokit.request(
             'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
             {
@@ -77,8 +77,8 @@ const updateBranch = async () => {
         });
     } catch (error) {
         console.warn('error', error);
-    }  
-}
+    }
+};
 
 async function main() {
     const pullRequestsList = await getPullRequests();
@@ -100,7 +100,7 @@ async function main() {
     // if (filteredPrs.error) console.log(filteredPrs);  
     testFunction();
     // updateBranch();
-}
+};
 
 
 
