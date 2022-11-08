@@ -11994,7 +11994,6 @@ const getPullRequests = async () => {
             core.setFailed(e.message)
         }
     )
-    console.log('resp', resp);
     return resp;
 };
 
@@ -12028,7 +12027,7 @@ const updateBranch = async (filteredPrs) => {
 
 async function main() {
     const pullRequestsList = await getPullRequests();
-
+    console.log('pullRequestsList', pullRequestsList.data);
     const filteredPrs = pullRequestsList.data
         .filter((pr) => pr.auto_merge !== null)
         .sort((a, b) => {
