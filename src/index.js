@@ -9,30 +9,11 @@ const repo = github.context.repo.repo
 const baseBranch = github.context.payload.ref
 
 const getPullRequests = async () => {
-
-    const prAllList = await octokit.pulls.list({
-        owner: repoOwner,
-        repo: repo,
-        state: 'open',
-    });
-    const promises = prAllList.map(o => octokit.pulls.listFiles({
-        owner,
-        repo,
-        pull_number: o.number,
-        per_page: 100,
-      }).then(r => ({
-        number: o.number,
-        files: r.data.map(f => f.filename),
-        conflicts: [],
-      })));
-    
-      const allFiles = await Promise.all(promises);
-    
-    console.log('allFiles', allFiles);
-
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
+        sort: 'long-running',
+        direction: 'asc',
     }).catch(
         e => {
             core.setFailed(e.message)
@@ -72,8 +53,15 @@ async function main() {
         .filter((pr) => pr.auto_merge !== null)
         .sort((a, b) => {
             return Date.parse(b.created_at) - Date.parse(a.created_at);
-        })
-        .reverse();
+        });
+    console.log(filteredPrs);
+    
+    const files = octokit.rest.pulls.listFiles({
+        owner: repoOwner,
+        repo: repo,
+        pull_number: filteredPrs[0].number,
+    });
+    console.log('files', files);
 
     filteredPrs.map((pr) => { console.log(`${pr.number} ${pr.created_at}`)})
 
