@@ -11984,6 +11984,14 @@ const repo = github.context.repo.repo
 const baseBranch = github.context.payload.ref
 
 const getPullRequests = async () => {
+
+    const prAllList = await octokit.pulls.list({
+        owner: repoOwner,
+        repo: repo,
+        state: 'open',
+    });
+    console.log('prAllList', prAllList);
+    
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
