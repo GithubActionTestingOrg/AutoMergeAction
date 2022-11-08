@@ -12007,17 +12007,21 @@ const updateBranch = async (filteredPrs) => {
     filteredPrs.map(async (pr) => {
         console.log('ref', github.context.ref);
         try {
-            await octokit.request(
-                'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
-                {
-                    owner: repoOwner,
-                    repo: repo,
-                    pull_number: pr.number,
-                }
-            ).then(() => {
-                console.log('updated', filteredPrs[0].number);
-                return;
-            });
+            // await octokit.request(
+            //     'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
+            //     {
+            //         owner: repoOwner,
+            //         repo: repo,
+            //         pull_number: pr.number,
+            //     }
+            // ).then(() => {
+            //     console.log('updated', filteredPrs[0].number);
+            // });
+            await octokit.rest.pulls.updateBranch({
+                owner: repoOwner,
+                repo: repo,
+                pull_number: pr.number,
+              });
         } catch (error) {
             console.warn('error', error);
         }
