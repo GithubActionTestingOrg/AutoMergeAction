@@ -11990,8 +11990,21 @@ const getPullRequests = async () => {
         repo: repo,
         state: 'open',
     });
-    console.log('prAllList', prAllList);
+    const promises = openedPrs.map(o => octokit.pulls.listFiles({
+        owner,
+        repo,
+        pull_number: o.number,
+        per_page: 100,
+      }).then(r => ({
+        number: o.number,
+        files: r.data.map(f => f.filename),
+        conflicts: [],
+      })));
     
+      const allFiles = await Promise.all(promises);
+    
+    console.log('allFiles', allFiles);
+
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
