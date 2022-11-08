@@ -39,15 +39,14 @@ const updateBranch = async (filteredPrs) => {
             //         repo: repo,
             //         pull_number: pr.number,
             //     }
-            // ).then(() => {
-            //     console.log('updated', filteredPrs[0].number);
-            // });
+            // )
             await octokit.rest.pulls.updateBranch({
                 owner: repoOwner,
                 repo: repo,
                 pull_number: pr.number,
+            }).then(() => {
+                    console.log('updated', pr.number);
             });
-            console.log('updated', pr.number);
         } catch (error) {
             console.warn('error', error);
         }
