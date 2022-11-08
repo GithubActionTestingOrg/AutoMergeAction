@@ -30,6 +30,7 @@ const updateBranch = async (filteredPrs) => {
         };
     }
     filteredPrs.map(async (pr) => {
+        console.log('ref', github.context.ref);
         try {
             await octokit.request(
                 'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
