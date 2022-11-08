@@ -66,11 +66,8 @@ async function main() {
         console.log('auto-merge prs is not found');
         return
     }
-
     if (filteredPrs.error) console.log(filteredPrs.error);  
     updateBranch(filteredPrs);
 };
-
-
 
 main();
