@@ -29,6 +29,7 @@ const updateBranch = async (filteredPrs) => {
             msg: 'Commit is already on the destination branch, ignoring',
         };
     }
+
     filteredPrs.some(async (pr) => {
         console.log('ref', github.context.ref);
         try {
@@ -45,7 +46,7 @@ const updateBranch = async (filteredPrs) => {
                 repo: repo,
                 pull_number: pr.number,
             }).then(() => {
-                    console.log('updated', pr.number);
+                console.log('updated', pr.number);
             });
         } catch (error) {
             console.warn('error', error);
