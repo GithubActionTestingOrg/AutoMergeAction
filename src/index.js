@@ -61,8 +61,7 @@ const updateBranch = async () => {
             repo: repo,
             pull_number: pullRequestArray[0].number,
         }).then(() => {
-            console.log('updated', pullRequestArray[0].number);
-            // console.log('updated', pullRequestArray[0]);
+            console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
         });
     } catch (error) {
         pullRequestArray.shift();
