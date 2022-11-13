@@ -52,8 +52,8 @@ const updateBranch = async () => {
 
     console.log('****************');
    
-    // const pullRequest = getPullRequest();
-    console.log('pr', pullRequestFragment);
+    const pullRequest = getPullRequest();
+    console.log('pr', pullRequest);
 
     try {
         await octokit.rest.pulls.updateBranch({
@@ -91,7 +91,6 @@ async function main() {
     updateBranch();
 };
 
-const pullRequestCount = 50
 const checkCount = 50
 const labelCount = 10
 
