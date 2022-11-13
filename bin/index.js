@@ -12055,7 +12055,7 @@ const updateBranch = async () => {
         return;
     }
 
-    const pullRequest = getPullRequest(pullRequestArray[0].number);
+    const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
     if (pullRequest.status === 'CONFLICTING') {
         console.log(`Pull request  №${pullRequest.number} has conflict`);
@@ -12064,7 +12064,7 @@ const updateBranch = async () => {
     }
     
     console.log(pullRequest);
-    
+
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
