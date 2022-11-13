@@ -52,7 +52,7 @@ const updateBranch = async () => {
 
     console.log('****************');
    
-    const pullRequest = getPullRequest(pullRequestArray[0].number);
+    const pullRequest = await getPullRequest(pullRequestArray[0].number);
     console.log('pr', pullRequest);
 
     try {
