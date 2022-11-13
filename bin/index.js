@@ -12033,7 +12033,7 @@ const getPullRequests = async () => {
 
 async function getPullRequest() {
     const result = await octokit.graphql(
-      `query ($owner, $repo, $num) {
+      `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
               ${pullRequestFragment}
@@ -12043,7 +12043,7 @@ async function getPullRequest() {
       {
         owner: repoOwner,
         repo: repo,
-        pull_number: pullRequestArray[0].number,
+        num,
       }
     )
     return result.repository.pullRequest
@@ -12060,7 +12060,7 @@ const updateBranch = async () => {
 
     console.log('****************');
    
-    const pullRequest = getPullRequest();
+    const pullRequest = getPullRequest(pullRequestArray[0].number);
     console.log('pr', pullRequest);
 
     try {
@@ -12109,6 +12109,7 @@ const pullRequestFragment = `
   number
   merged
   mergeable
+  mergeStateStatus
   reviews(states: APPROVED) {
     totalCount
   }
