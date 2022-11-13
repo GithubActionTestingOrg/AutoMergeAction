@@ -8,7 +8,6 @@ const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 const baseBranch = github.context.payload.ref
 let pullRequestArray = [];
-const ctx = github.context;
 
 const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
@@ -29,7 +28,7 @@ export async function getPullRequest() {
       `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
-              ${pullRequestFragment}
+              ${pullRequestArray[0].number}
             }
           }
         }`,
