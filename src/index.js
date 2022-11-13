@@ -42,7 +42,7 @@ export async function getPullRequest() {
       }
     )
     return result.repository.pullRequest
-  }
+};
 
 const updateBranch = async () => {
     if (github.context.ref === `refs/heads/${baseBranch}`) {
@@ -55,8 +55,8 @@ const updateBranch = async () => {
 
     console.log('****************');
    
-    const pullRequest = getPullRequest();
-    console.log('pr', pullRequest);
+    // const pullRequest = getPullRequest();
+    console.log('pr', pullRequestFragment);
 
     try {
         await octokit.rest.pulls.updateBranch({
