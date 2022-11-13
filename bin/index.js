@@ -12017,12 +12017,12 @@ const updateBranch = async () => {
     
     console.log(commits);
 
-    let lastHeadCommit = await octokit.request('GET /repos/{owner}/{repo}/commits{?sha,path,author,since,until,per_page,page}', {
+    let {data: lastHeadCommit} = await octokit.request('GET /repos/{owner}/{repo}/commits{?sha,path,author,since,until,per_page,page}', {
         owner: repoOwner,
         repo: repo,
     });
 
-    console.log('lastHeadCommit', lastHeadCommit);
+    console.log('lastHeadCommit', lastHeadCommit[lastHeadCommit.length - 1]);
 
     try {
         await octokit.rest.pulls.updateBranch({
