@@ -30,7 +30,8 @@ const updateBranch = async () => {
             msg: 'Commit is already on the destination branch, ignoring',
         };
     }
-    console.log(pullRequestArray);
+    pullRequestArray.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
+
     console.log('****************');
     try {
         await octokit.rest.pulls.updateBranch({
@@ -46,7 +47,7 @@ const updateBranch = async () => {
             pullRequestArray.shift();
             updateBranch();
         }
-        
+
         console.warn('error', error);
     };
 };
@@ -57,7 +58,6 @@ async function main() {
 
     pullRequestArray = filteredPrs;
 
-    filteredPrs.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
 
     if (!pullRequestArray.length) {
         console.log('auto-merge prs is not found');
