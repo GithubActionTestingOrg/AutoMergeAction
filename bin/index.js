@@ -12109,7 +12109,6 @@ const pullRequestFragment = `
   number
   merged
   mergeable
-  mergeStateStatus
   reviews(states: APPROVED) {
     totalCount
   }
