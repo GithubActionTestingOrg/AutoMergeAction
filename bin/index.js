@@ -12033,7 +12033,7 @@ const getPullRequests = async () => {
 };
 
 async function getPullRequest() {
-    const result = await ctx.octokit.graphql(
+    const result = await octokit.graphql(
       `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
@@ -12066,7 +12066,7 @@ const updateBranch = async () => {
    
     const pullRequest = getPullRequest();
     console.log('pr', pullRequest);
-    
+
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
