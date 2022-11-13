@@ -33,6 +33,15 @@ const updateBranch = async () => {
     pullRequestArray.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
 
     console.log('****************');
+   
+    let commits = await octokit.rest.pulls.listCommits({
+        owner: repoOwner,
+        repo: repo,
+        pull_number: pullRequestArray[0].number,
+    });
+    
+    console.log(commits) 
+
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
@@ -40,8 +49,7 @@ const updateBranch = async () => {
             pull_number: pullRequestArray[0].number,
         }).then(() => {
             console.log('updated', pullRequestArray[0].number);
-            console.log('updated', pullRequestArray[0]);
-
+            // console.log('updated', pullRequestArray[0]);
         });
     } catch (error) {
         
@@ -64,7 +72,9 @@ async function main() {
         console.log('auto-merge prs is not found');
         return
     }
+
     if (pullRequestArray.error) console.log(pullRequestArray.error);  
+    
     updateBranch();
 };
 
