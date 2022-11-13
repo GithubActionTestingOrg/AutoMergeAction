@@ -40,7 +40,14 @@ const updateBranch = async () => {
         pull_number: pullRequestArray[0].number,
     });
     
-    console.log(commits) 
+    console.log(commits);
+
+    let lastHeadCommit = await octokit.request('GET /repos/{owner}/{repo}/commits{?sha,path,author,since,until,per_page,page}', {
+        owner: repoOwner,
+        repo: repo,
+    });
+
+    console.log('lastHeadCommit', lastHeadCommit);
 
     try {
         await octokit.rest.pulls.updateBranch({
@@ -74,7 +81,7 @@ async function main() {
     }
 
     if (pullRequestArray.error) console.log(pullRequestArray.error);  
-    
+
     updateBranch();
 };
 
