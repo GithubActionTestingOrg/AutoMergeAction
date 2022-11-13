@@ -12050,19 +12050,19 @@ async function getPullRequest(num) {
 };
 
 const updateBranch = async () => {
-    if (github.context.ref === `refs/heads/${baseBranch}`) {
-        return {
-            type: 'warning',
-            msg: 'Commit is already on the destination branch, ignoring',
-        };
+    if (!pullRequestArray.length) {
+        console.log('No pull request for update');
+        return;
     }
-    pullRequestArray.map((pr) => { console.log(`Pull Request - ${pr.number} ${pr.created_at}`)})
 
-    console.log('****************');
-   
-    const pullRequest = await getPullRequest(pullRequestArray[0].number);
-    console.log('pr', pullRequest);
+    const pullRequest = getPullRequest(pullRequestArray[0].number);
 
+    if (pullRequest.status === 'CONFLICTING') {
+        console.log(`Pull request  №${pullRequest.number} has conflict`);
+        pullRequestArray.shift();
+        updateBranch();
+    }
+    
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
@@ -12073,12 +12073,8 @@ const updateBranch = async () => {
             // console.log('updated', pullRequestArray[0]);
         });
     } catch (error) {
-        
-        if (pullRequestArray.length) {
-            pullRequestArray.shift();
-            updateBranch();
-        }
-
+        pullRequestArray.shift();
+        updateBranch();
         console.warn('error', error);
     };
 };
