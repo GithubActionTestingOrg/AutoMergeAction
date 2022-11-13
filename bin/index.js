@@ -11965,14 +11965,47 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
+__nccwpck_require__.r(__webpack_exports__);
+/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
+/* harmony export */   "getPullRequest": () => (/* binding */ getPullRequest)
+/* harmony export */ });
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(5375);
@@ -11983,6 +12016,7 @@ const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 const baseBranch = github.context.payload.ref
 let pullRequestArray = [];
+const ctx = github.context;
 
 const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
@@ -11998,6 +12032,27 @@ const getPullRequests = async () => {
     return resp;
 };
 
+async function getPullRequest() {
+    const result = await ctx.octokit.graphql(
+      `query ($owner: String!, $repo: String!, $num: Int!) {
+          repository(name: $repo, owner: $owner) {
+            pullRequest(number: $num) {
+              ${pullRequestFragment}
+            }
+          }
+        }`,
+      {
+        headers: {
+          accept: 'application/vnd.github.merge-info-preview+json'
+        },
+        owner: repoOwner,
+        repo: repo,
+        pull_number: pullRequestArray[0].number,
+      }
+    )
+    return result.repository.pullRequest
+  }
+
 const updateBranch = async () => {
     if (github.context.ref === `refs/heads/${baseBranch}`) {
         return {
@@ -12009,21 +12064,9 @@ const updateBranch = async () => {
 
     console.log('****************');
    
-    let commits = await octokit.rest.pulls.listCommits({
-        owner: repoOwner,
-        repo: repo,
-        pull_number: pullRequestArray[0].number,
-    });
+    const pullRequest = getPullRequest();
+    console.log('pr', pullRequest);
     
-    console.log(commits);
-
-    let {data: lastHeadCommit} = await octokit.request('GET /repos/{owner}/{repo}/commits{?sha,path,author,since,until,per_page,page}', {
-        owner: repoOwner,
-        repo: repo,
-    });
-
-    console.log('lastHeadCommit', lastHeadCommit[lastHeadCommit.length - 1]);
-
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
@@ -12059,6 +12102,51 @@ async function main() {
 
     updateBranch();
 };
+
+const pullRequestCount = 50
+const checkCount = 50
+const labelCount = 10
+
+const pullRequestFragment = `
+  id
+  title
+  baseRefName
+  number
+  merged
+  mergeable
+  mergeStateStatus
+  reviews(states: APPROVED) {
+    totalCount
+  }
+  reviewRequests {
+    totalCount
+  }
+  labels(first: ${labelCount}) {
+    nodes {
+      name
+    }
+  }
+  commits(last: 1) {
+    nodes {
+      commit {
+        statusCheckRollup {
+          contexts(first: ${checkCount}) {
+            nodes {
+              ... on CheckRun {
+                name
+                conclusion
+              }
+              ... on StatusContext {
+                context
+                state
+              }
+            }
+          }
+          state
+        }
+      }
+    }
+  }`
 
 main();
 })();

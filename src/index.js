@@ -8,6 +8,7 @@ const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
 const baseBranch = github.context.payload.ref
 let pullRequestArray = [];
+const ctx = github.context;
 
 const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
@@ -23,6 +24,27 @@ const getPullRequests = async () => {
     return resp;
 };
 
+export async function getPullRequest() {
+    const result = await ctx.octokit.graphql(
+      `query ($owner: String!, $repo: String!, $num: Int!) {
+          repository(name: $repo, owner: $owner) {
+            pullRequest(number: $num) {
+              ${pullRequestFragment}
+            }
+          }
+        }`,
+      {
+        headers: {
+          accept: 'application/vnd.github.merge-info-preview+json'
+        },
+        owner: repoOwner,
+        repo: repo,
+        pull_number: pullRequestArray[0].number,
+      }
+    )
+    return result.repository.pullRequest
+  }
+
 const updateBranch = async () => {
     if (github.context.ref === `refs/heads/${baseBranch}`) {
         return {
@@ -34,21 +56,9 @@ const updateBranch = async () => {
 
     console.log('****************');
    
-    let commits = await octokit.rest.pulls.listCommits({
-        owner: repoOwner,
-        repo: repo,
-        pull_number: pullRequestArray[0].number,
-    });
+    const pullRequest = getPullRequest();
+    console.log('pr', pullRequest);
     
-    console.log(commits);
-
-    let {data: lastHeadCommit} = await octokit.request('GET /repos/{owner}/{repo}/commits{?sha,path,author,since,until,per_page,page}', {
-        owner: repoOwner,
-        repo: repo,
-    });
-
-    console.log('lastHeadCommit', lastHeadCommit[lastHeadCommit.length - 1]);
-
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
@@ -84,5 +94,50 @@ async function main() {
 
     updateBranch();
 };
+
+const pullRequestCount = 50
+const checkCount = 50
+const labelCount = 10
+
+const pullRequestFragment = `
+  id
+  title
+  baseRefName
+  number
+  merged
+  mergeable
+  mergeStateStatus
+  reviews(states: APPROVED) {
+    totalCount
+  }
+  reviewRequests {
+    totalCount
+  }
+  labels(first: ${labelCount}) {
+    nodes {
+      name
+    }
+  }
+  commits(last: 1) {
+    nodes {
+      commit {
+        statusCheckRollup {
+          contexts(first: ${checkCount}) {
+            nodes {
+              ... on CheckRun {
+                name
+                conclusion
+              }
+              ... on StatusContext {
+                context
+                state
+              }
+            }
+          }
+          state
+        }
+      }
+    }
+  }`
 
 main();
