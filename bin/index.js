@@ -12015,6 +12015,8 @@ const updateBranch = async () => {
             pull_number: pullRequestArray[0].number,
         }).then(() => {
             console.log('updated', pullRequestArray[0].number);
+            console.log('updated', pullRequestArray[0]);
+
         });
     } catch (error) {
         
