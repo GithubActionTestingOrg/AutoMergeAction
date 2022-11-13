@@ -28,14 +28,11 @@ export async function getPullRequest() {
       `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
-              ${pullRequestArray[0].number}
+              ${pullRequestFragment}
             }
           }
         }`,
       {
-        headers: {
-          accept: 'application/vnd.github.merge-info-preview+json'
-        },
         owner: repoOwner,
         repo: repo,
         pull_number: pullRequestArray[0].number,
