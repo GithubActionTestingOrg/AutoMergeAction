@@ -12057,15 +12057,13 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    if (pullRequest.status !== 'MERGEABLE') {
+    if (pullRequest.status === 'CONFLICTING') {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
         pullRequestArray.shift();
         updateBranch();
     }
     
     console.log(pullRequest);
-
-    console.log(pullRequest.commits.nodes);
 
     try {
         await octokit.rest.pulls.updateBranch({
