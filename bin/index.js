@@ -12016,8 +12016,12 @@ const updateBranch = async () => {
             console.log('updated', pr.number);
         });
     } catch (error) {
-        pullRequestArray.shift();
-        updateBranch();
+        
+        if (pullRequestArray.length) {
+            pullRequestArray.shift();
+            updateBranch();
+        }
+        
         console.warn('error', error);
     };
 };
