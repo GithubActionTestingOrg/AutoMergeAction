@@ -12012,9 +12012,9 @@ const updateBranch = async () => {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
             repo: repo,
-            pull_number: pr.number,
+            pull_number: pullRequestArray[0].number,
         }).then(() => {
-            console.log('updated', pr.number);
+            console.log('updated', pullRequestArray[0].number);
         });
     } catch (error) {
         
@@ -12032,7 +12032,6 @@ async function main() {
     const filteredPrs = pullRequestsList.data.filter((pr) => pr.auto_merge !== null);
 
     pullRequestArray = filteredPrs;
-
 
     if (!pullRequestArray.length) {
         console.log('auto-merge prs is not found');
