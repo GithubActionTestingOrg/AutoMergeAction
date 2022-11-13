@@ -55,6 +55,8 @@ const updateBranch = async () => {
         updateBranch();
     }
     
+    console.log(pullRequest);
+    
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
