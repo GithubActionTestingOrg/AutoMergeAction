@@ -34,6 +34,7 @@ export async function getPullRequest(num) {
                 number
                 merged
                 mergeable
+                reviewDecision
                 state
                 body
                 reviews(first: 100) {
@@ -64,7 +65,7 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    console.log(`pullRequest ${pullRequest.id} ` ,pullRequest.mergeable);
+    console.log(`pullRequest ${pullRequest.id} ` ,pullRequest.reviewDecision);
 
 
     if (pullRequest.status === 'CONFLICTING') {
