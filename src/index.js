@@ -71,7 +71,7 @@ const updateBranch = async () => {
     }
     
     console.log(pullRequest);
-    console.log(pullRequest.reviews.nodes);
+    console.log(pullRequest.mergeable);
 
     try {
         await octokit.rest.pulls.updateBranch({

@@ -12044,9 +12044,9 @@ async function getPullRequest(num) {
                 mergeable
                 state
                 body
-                reviews(first: 10) {
+                reviews(first: 100) {
                    nodes {
-                     state
+                        state
                    }
                 }
                 reviewRequests {
@@ -12079,7 +12079,7 @@ const updateBranch = async () => {
     }
     
     console.log(pullRequest);
-    console.log(pullRequest.reviews.nodes);
+    console.log(pullRequest.mergeable);
 
     try {
         await octokit.rest.pulls.updateBranch({
