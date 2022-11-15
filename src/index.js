@@ -28,7 +28,18 @@ export async function getPullRequest(num) {
       `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
-              ${pullRequestFragment}
+                id
+                title
+                baseRefName
+                number
+                merged
+                mergeable
+                reviews(states: APPROVED) {
+                    totalCount
+                }
+                reviewRequests {
+                    totalCount
+                }
             }
           }
         }`,
@@ -87,19 +98,5 @@ async function main() {
 
     updateBranch();
 };
-
-const pullRequestFragment = `
-  id
-  title
-  baseRefName
-  number
-  merged
-  mergeable
-  reviews(states: APPROVED) {
-    totalCount
-  }
-  reviewRequests {
-    totalCount
-  }`
 
 main();
