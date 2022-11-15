@@ -37,14 +37,7 @@ export async function getPullRequest(num) {
                 state
                 body
                 reviews {
-                    reactions {
-                        content
-                        user {
-                          login
-                        }
-                    }
-                    body
-                    comments
+                   state
                 }
                 reviewRequests {
                     totalCount
@@ -68,8 +61,6 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
-
-    console.log(pullRequest.reviews);
 
     if (pullRequest.status === 'CONFLICTING') {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
