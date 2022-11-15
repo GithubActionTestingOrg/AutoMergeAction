@@ -12044,7 +12044,7 @@ async function getPullRequest(num) {
                 mergeable
                 state
                 body
-                reviews {
+                reviews(first: 10) {
                    nodes {
                      state
                    }
