@@ -88,9 +88,6 @@ async function main() {
     updateBranch();
 };
 
-const checkCount = 50
-const labelCount = 10
-
 const pullRequestFragment = `
   id
   title
@@ -103,32 +100,6 @@ const pullRequestFragment = `
   }
   reviewRequests {
     totalCount
-  }
-  labels(first: ${labelCount}) {
-    nodes {
-      name
-    }
-  }
-  commits(last: 1) {
-    nodes {
-      commit {
-        statusCheckRollup {
-          contexts(first: ${checkCount}) {
-            nodes {
-              ... on CheckRun {
-                name
-                conclusion
-              }
-              ... on StatusContext {
-                context
-                state
-              }
-            }
-          }
-          state
-        }
-      }
-    }
   }`
 
 main();
