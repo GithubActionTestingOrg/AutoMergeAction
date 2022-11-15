@@ -36,7 +36,16 @@ export async function getPullRequest(num) {
                 mergeable
                 state
                 body
-                reviews
+                reviews {
+                    reactions {
+                        content
+                        user {
+                          login
+                        }
+                    }
+                    body
+                    comments
+                }
                 reviewRequests {
                     totalCount
                 }
