@@ -12042,6 +12042,8 @@ async function getPullRequest(num) {
                 number
                 merged
                 mergeable
+                state
+                body
                 reviews(states: APPROVED) {
                     totalCount
                 }
