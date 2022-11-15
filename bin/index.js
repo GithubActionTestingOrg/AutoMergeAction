@@ -12042,8 +12042,12 @@ async function getPullRequest(num) {
                 number
                 merged
                 mergeable
-                reviews(states: APPROVED) {
-                    totalCount
+                state
+                body
+                reviews(first: 10) {
+                   nodes {
+                     state
+                   }
                 }
                 reviewRequests {
                     totalCount
@@ -12075,6 +12079,7 @@ const updateBranch = async () => {
     }
     
     console.log(pullRequest);
+    console.log(pullRequest.reviews.nodes);
 
     try {
         await octokit.rest.pulls.updateBranch({
