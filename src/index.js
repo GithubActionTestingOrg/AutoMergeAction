@@ -68,6 +68,7 @@ const updateBranch = async () => {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
         pullRequestArray.shift();
         updateBranch();
+        return;
     }
     
     console.log(pullRequest);
