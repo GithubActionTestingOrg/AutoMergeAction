@@ -12079,7 +12079,7 @@ const updateBranch = async () => {
     }
     
     console.log(pullRequest);
-    console.log(pullRequest.reviews.nodes.state);
+    console.log(pullRequest.reviews.nodes);
 
     try {
         await octokit.rest.pulls.updateBranch({
