@@ -12045,7 +12045,9 @@ async function getPullRequest(num) {
                 state
                 body
                 reviews {
-                   state
+                   nodes {
+                     state
+                   }
                 }
                 reviewRequests {
                     totalCount
