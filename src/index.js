@@ -34,6 +34,7 @@ export async function getPullRequest(num) {
                 number
                 merged
                 mergeable
+                reviewDecision
                 state
                 body
                 reviews(first: 100) {
@@ -64,15 +65,18 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    if (pullRequest.status === 'CONFLICTING') {
+    console.log(`pullRequest ${pullRequest.id} `, pullRequest.reviewDecision);
+
+    if (
+        pullRequest.status === 'CONFLICTING' &&
+        (pullRequest.reviewDecision === 'CHANGES_REQUESTED' || 'REVIEW_REQUIRED')
+    ) {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
         pullRequestArray.shift();
         updateBranch();
+        return;
     }
     
-    console.log(pullRequest);
-    console.log(pullRequest.reviews.nodes);
-
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
@@ -84,7 +88,6 @@ const updateBranch = async () => {
     } catch (error) {
         pullRequestArray.shift();
         updateBranch();
-        console.warn('error', error);
     };
 };
 
@@ -95,7 +98,7 @@ async function main() {
     pullRequestArray = filteredPrs;
 
     if (!pullRequestArray.length) {
-        console.log('auto-merge prs is not found');
+        console.log('auto-merge pull requests is not found');
         return
     }
 
