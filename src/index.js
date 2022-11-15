@@ -4,54 +4,99 @@ const { Octokit } = require("@octokit/rest");
 
 const token = core.getInput('token');
 const octokit = new Octokit({ auth: token });
-const baseBranch = github.context.payload.ref
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
+const baseBranch = github.context.payload.ref
+let pullRequestArray = [];
 
- const getPullRequests = async () => {
+const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
         repo: repo,
+        sort: 'long-running',
+        direction: 'desc',
     }).catch(
         e => {
             core.setFailed(e.message)
         }
-     )
+    )
     return resp;
-}
+};
+
+export async function getPullRequest(num) {
+    const result = await octokit.graphql(
+      `query ($owner: String!, $repo: String!, $num: Int!) {
+          repository(name: $repo, owner: $owner) {
+            pullRequest(number: $num) {
+                id
+                title
+                baseRefName
+                number
+                merged
+                mergeable
+                reviews(states: APPROVED) {
+                    totalCount
+                }
+                reviewRequests {
+                    totalCount
+                }
+            }
+          }
+        }`,
+      {
+        owner: repoOwner,
+        repo: repo,
+        num,
+      }
+    )
+    return result.repository.pullRequest
+};
+
+const updateBranch = async () => {
+    if (!pullRequestArray.length) {
+        console.log('No pull request for update');
+        return;
+    }
+
+    const pullRequest = await getPullRequest(pullRequestArray[0].number);
+
+    if (pullRequest.status === 'CONFLICTING') {
+        console.log(`Pull request  №${pullRequest.number} can not be merged`);
+        pullRequestArray.shift();
+        updateBranch();
+    }
+    
+    console.log(pullRequest);
+
+    try {
+        await octokit.rest.pulls.updateBranch({
+            owner: repoOwner,
+            repo: repo,
+            pull_number: pullRequestArray[0].number,
+        }).then(() => {
+            console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
+        });
+    } catch (error) {
+        pullRequestArray.shift();
+        updateBranch();
+        console.warn('error', error);
+    };
+};
 
 async function main() {
-
     const pullRequestsList = await getPullRequests();
+    const filteredPrs = pullRequestsList.data.filter((pr) => pr.auto_merge !== null);
 
-    const filteredPrs = pullRequestsList.data
-        .filter((pr) => pr.auto_merge !== null)
-        .sort((a, b) => {
-            return Date.parse(b.created_at) - Date.parse(a.created_at);
-        })
-        .reverse();
+    pullRequestArray = filteredPrs;
 
-    filteredPrs.map((pr) => { console.log(`${pr.number} ${pr.created_at}`)})
-
-    if (!filteredPrs.length) {
+    if (!pullRequestArray.length) {
         console.log('auto-merge prs is not found');
         return
     }
-    console.log(filteredPrs);    
-    try { 
-        await octokit.request(
-            'PUT /repos/{owner}/{repo}/pulls/{pull_number}/update-branch',
-            {
-                owner: repoOwner,
-                repo: repo,
-                pull_number: filteredPrs[0].number,
-            }
-        ).then(() => {
-            console.log('updated', filteredPrs[0].number)
-        });
-    } catch (error) {
-        console.warn('error2', error);
-    }  
-}
+
+    if (pullRequestArray.error) console.log(pullRequestArray.error);  
+
+    updateBranch();
+};
 
 main();
