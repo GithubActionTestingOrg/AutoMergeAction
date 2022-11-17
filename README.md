@@ -19,4 +19,9 @@ jobs:
               uses: GithubActionTestingOrg/AutoMergeAction@v2.1
               with:
                   token: ${{ secrets.GH_TOKEN }}
+                  head: 'master'
 ```
+
+Where:
+ token - is yours github secret token
+ head - name of yours main branch which needs to be updated
