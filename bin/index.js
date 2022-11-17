@@ -12073,7 +12073,7 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
-
+    console.log(pullRequest.head);
     console.log(`pullRequest ${pullRequest.id} `, pullRequest.reviewDecision);
 
     if (
@@ -12103,7 +12103,6 @@ const updateBranch = async () => {
 async function main() {
     const pullRequestsList = await getPullRequests();
     const filteredPrs = pullRequestsList.data.filter((pr) => pr.auto_merge !== null);
-    console.log(headBranch);
     pullRequestArray = filteredPrs;
 
     if (!pullRequestArray.length) {
