@@ -23,5 +23,5 @@ jobs:
 ```
 
 Where:
- - token - it's yours github secret token
- - head  - name of yours main branch which needs to be updated
+ - token - Github token required to push the commit to the branch (required)
+ - head  - Name of yours main branch which needs to be updated (required)
