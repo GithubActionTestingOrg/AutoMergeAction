@@ -65,7 +65,7 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
-    console.log(pullRequest.head);
+    console.log(pullRequest);
     console.log(`pullRequest ${pullRequest.id} `, pullRequest.reviewDecision);
 
     if (
