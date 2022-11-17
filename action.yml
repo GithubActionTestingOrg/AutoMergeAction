@@ -1,14 +1,17 @@
 name: PR updater
 description: Keep your pull requests up to date with base branch
 inputs:
-  token:
-    required: true
-    description: "Token to perform api calls"
+    token:
+        required: true
+        description: "Token to perform api calls"
+    head:
+        required: true
+        description: "Your master branch"
 
 runs:
-  using: node12
-  main: bin/index.js
+    using: node12
+    main: bin/index.js
 
 branding:
-  icon: git-pull-request
-  color: green
+    icon: git-pull-request
+    color: green
