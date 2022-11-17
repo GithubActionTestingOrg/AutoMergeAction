@@ -22,6 +22,6 @@ jobs:
                   head: 'master'
 ```
 
-Where:
- - token - Github token required to push the commit to the branch (required)
- - head  - Name of yours main branch which needs to be updated (required)
+Inputs:
+ - token (required) - Github token required to push the commit to the branch
+ - head (required)  - Name of yours main branch which needs to be updated
