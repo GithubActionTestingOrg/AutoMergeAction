@@ -1,5 +1,9 @@
 # Update branches with enabled auto-merge action
 
+Inputs:
+ - token (required) - Github token required to push the commit to the branch
+ - head (required)  - Name of yours main branch which needs to be updated
+
 Use example: 
 
 ```sh
@@ -21,7 +25,3 @@ jobs:
                   token: ${{ secrets.GH_TOKEN }}
                   head: 'master'
 ```
-
-Inputs:
- - token (required) - Github token required to push the commit to the branch
- - head (required)  - Name of yours main branch which needs to be updated
