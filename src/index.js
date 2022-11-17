@@ -6,7 +6,8 @@ const token = core.getInput('token');
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
-const baseBranch = github.context.payload.ref
+const headBranch = core.getInput('head'); 
+    
 let pullRequestArray = [];
 
 const getPullRequests = async () => {
@@ -65,11 +66,10 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    console.log(`pullRequest ${pullRequest.id} `, pullRequest.reviewDecision);
-
     if (
         pullRequest.status === 'CONFLICTING' &&
-        (pullRequest.reviewDecision === 'CHANGES_REQUESTED' || 'REVIEW_REQUIRED')
+        (pullRequest.reviewDecision === 'CHANGES_REQUESTED' || 'REVIEW_REQUIRED') && 
+        pullRequest.baseRefName !== headBranch
     ) {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
         pullRequestArray.shift();
@@ -94,7 +94,6 @@ const updateBranch = async () => {
 async function main() {
     const pullRequestsList = await getPullRequests();
     const filteredPrs = pullRequestsList.data.filter((pr) => pr.auto_merge !== null);
-
     pullRequestArray = filteredPrs;
 
     if (!pullRequestArray.length) {
