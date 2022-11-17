@@ -6,7 +6,7 @@ const token = core.getInput('token');
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
-const baseBranch = github.context.payload.ref
+
 let pullRequestArray = [];
 
 const getPullRequests = async () => {
@@ -94,7 +94,7 @@ const updateBranch = async () => {
 async function main() {
     const pullRequestsList = await getPullRequests();
     const filteredPrs = pullRequestsList.data.filter((pr) => pr.auto_merge !== null);
-
+    console.log(pullRequestsList);
     pullRequestArray = filteredPrs;
 
     if (!pullRequestArray.length) {
