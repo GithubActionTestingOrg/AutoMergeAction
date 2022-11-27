@@ -1,6 +1,6 @@
 name: PR update
 
-on: [push]
+on: workflow_dispatch
 
 jobs:
     autoupdate:
@@ -8,7 +8,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
-              uses: ./
+              uses: GithubActionTastingOrg/AutoMergeAction@v2.0
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   head: "main"

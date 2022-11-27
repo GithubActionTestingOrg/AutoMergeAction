@@ -16,6 +16,7 @@ const getPullRequests = async () => {
         repo: repo,
         sort: 'long-running',
         direction: 'desc',
+        base: headBranch,
     }).catch(
         e => {
             core.setFailed(e.message)
@@ -68,8 +69,7 @@ const updateBranch = async () => {
 
     if (
         pullRequest.status === 'CONFLICTING' &&
-        (pullRequest.reviewDecision === 'CHANGES_REQUESTED' || 'REVIEW_REQUIRED') && 
-        pullRequest.baseRefName !== headBranch
+        ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
     ) {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
         pullRequestArray.shift();
