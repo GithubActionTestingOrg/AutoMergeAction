@@ -68,7 +68,7 @@ const updateBranch = async () => {
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
     if (
-        pullRequest.status === 'CONFLICTING' &&
+        pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
     ) {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
