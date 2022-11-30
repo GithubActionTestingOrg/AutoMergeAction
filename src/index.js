@@ -58,12 +58,12 @@ export async function getPullRequest(num) {
         }
     );
 
-    // const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
-    //     owner: repoOwner,
-    //     repo: repo,
-    //     ref: result.repository.pullRequest
-    // });
-    // console.log(checkStatus)
+    const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
+        owner: repoOwner,
+        repo: repo,
+        ref: result.repository.pullRequest.title
+    });
+    console.log(checkStatus)
 
     return  result.repository.pullRequest
 };
