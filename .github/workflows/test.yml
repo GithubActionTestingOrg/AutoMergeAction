@@ -1,6 +1,8 @@
 name: PR update
 
-on: workflow_dispatch
+on: 
+    schedule:
+        - cron: "* * * * *"
 
 jobs:
     autoupdate:
