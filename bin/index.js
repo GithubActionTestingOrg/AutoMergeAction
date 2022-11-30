@@ -12056,6 +12056,11 @@ async function getPullRequest(num) {
                 reviewRequests {
                     totalCount
                 }
+                commits(last) {
+                    checkSuites() {
+                        status
+                    }
+                }
             }
           }
         }`,
@@ -12066,16 +12071,13 @@ async function getPullRequest(num) {
         }
     );
 
-    const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs{?check_name,status,filter,per_page,page,app_id}', {
-        owner: repoOwner,
-        repo: repo,
-        ref: result.repository.pullRequest.headRef,
-      });
+    // const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs{?check_name,status,filter,per_page,page,app_id}', {
+    //     owner: repoOwner,
+    //     repo: repo,
+    //     ref: result.repository.pullRequest.headRef,
+    //   });
 
-    return {
-        pullRequest: result.repository.pullRequest,
-        checkStatus: checkStatus.check_runs,
-    }
+    return  result.repository.pullRequest
 };
 
 const updateBranch = async () => {
@@ -12084,10 +12086,10 @@ const updateBranch = async () => {
         return;
     }
 
-    const { pullRequest, checkStatus } = await getPullRequest(pullRequestArray[0].number);
+    const  pullRequest = await getPullRequest(pullRequestArray[0].number);
     
 
-    console.log('checkStatus', checkStatus);
+    // console.log('checkStatus', checkStatus);
 
     console.log('pullRequest', pullRequest);
 
