@@ -1,90 +1,12 @@
-name: Pull-Requests Check
-
-concurrency:
-    group: tests-${{ github.ref }}
-    cancel-in-progress: true
-
-on: [pull_request]
+name: "Pull Request Labeler"
+on:
+    - pull_request_target
 
 jobs:
-    check-changes:
-        uses: ./.github/workflows/check-changes.yml
-
-    Lint:
-        needs: check-changes
-        if: |
-            !(
-              needs.check-changes.outputs.is_only_tests_changed == 'true'
-            )
-        runs-on: self-hosted
+    triage:
+        runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/labeler@main
               with:
-                  node-version: 16
-            - name: install node_modules
-              run: yarn install --frozen-lockfile; yarn add node-sass
-            - name: added d.ts for scss
-              run: yarn typed-scss-modules modules --nameFormat none;
-            - name: eslint
-              run: yarn lint-stage
-            - name: flow
-              run: yarn typecheck-flow-stage
-            - name: ts
-              run: yarn typecheck-ts-stage
-
-    Lint-TA:
-        runs-on: self-hosted
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - name: TA tests lint
-              env:
-                  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-              run: |
-                  cd ./__ui__/
-                  yarn install --frozen-lockfile
-                  yarn eslint
-    Tests:
-        needs: check-changes
-        if: |
-            !(
-              needs.check-changes.outputs.is_only_tests_changed == 'true'
-            )
-        runs-on: self-hosted
-        timeout-minutes: 40
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - name: install node_modules
-              run: yarn install --frozen-lockfile
-            - name: Run tests
-              uses: optimaxdev/action-tests@v1.1.1
-              with:
-                  token: ${{ secrets.GH_TOKEN }}
-                  jest-flags: --passWithNoTests
-
-    DangerJS:
-        needs: check-changes
-        if: |
-            !(
-              needs.check-changes.outputs.is_only_tests_changed == 'true'
-            )
-        runs-on: self-hosted
-        timeout-minutes: 40
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 16
-            - name: DangerJS
-              env:
-                  DANGER_GITHUB_API_TOKEN: ${{ secrets.GH_TOKEN }}
-              run: |
-                  yarn install --frozen-lockfile
-                  yarn buildForTest
-                  yarn danger ci
+                  repo-token: "test"
+                  sync-labels: true
