@@ -10,7 +10,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
-              uses: GithubActionTastingOrg/AutoMergeAction@v2.0
+              uses: GithubActionTastingOrg/AutoMergeAction@v2.4
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   head: "main"
