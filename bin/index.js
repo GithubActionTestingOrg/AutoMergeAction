@@ -12056,11 +12056,6 @@ async function getPullRequest(num) {
                 reviewRequests {
                     totalCount
                 }
-                commits(last) {
-                    checkSuites() {
-                        status
-                    }
-                }
             }
           }
         }`,
@@ -12071,11 +12066,12 @@ async function getPullRequest(num) {
         }
     );
 
-    // const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs{?check_name,status,filter,per_page,page,app_id}', {
+    // const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
     //     owner: repoOwner,
     //     repo: repo,
-    //     ref: result.repository.pullRequest.headRef,
-    //   });
+    //     ref: result.repository.pullRequest
+    // });
+    // console.log(checkStatus)
 
     return  result.repository.pullRequest
 };
