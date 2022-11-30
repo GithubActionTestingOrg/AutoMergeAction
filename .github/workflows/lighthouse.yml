@@ -1,0 +1,54 @@
+name: Pull-Requests Check Performance Budget
+
+concurrency:
+    group: lighthouse-${{ github.ref }}
+    cancel-in-progress: true
+
+on: [pull_request]
+
+jobs:
+    check-changes:
+        uses: ./.github/workflows/check-changes.yml
+
+    Lighthouse:
+        runs-on: self-hosted
+        needs: check-changes
+        if: |
+            !(
+              needs.check-changes.outputs.is_only_tests_changed == 'true'
+            )
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+            - name: Set outputs
+              run: |
+                  echo "##[set-output name=pr_number;]$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")"
+                  echo "##[set-output name=nginx_domain;]$(.github/scripts/configure-ui-tests.sh)"
+              id: set_outputs
+            - name: Build Frontend
+              run: |
+                  yarn install --frozen-lockfile
+                  yarn buildForTest
+            - name: docker-compose up
+              run: |
+                  docker-compose -f docker-compose-ui.yml pull
+                  docker-compose -f docker-compose-ui.yml up -d --remove-orphans
+            - uses: actions/github-script@v6
+              with:
+                  script: |
+                      const collectResults = require('./lighthouse/collectAndSaveResults.js');
+                      await collectResults({
+                        network: '${{ github.run_number }}',
+                        budgetFilePath: './lighthouse/performanceBudget.json',
+                        baseUrl: 'https://${{ steps.set_outputs.outputs.nginx_domain }}',
+                        amountOfRuns: 3,
+                      });
+            - uses: actions/github-script@v6
+              with:
+                  script: |
+                      const printResults = require('./lighthouse/printResults.js');
+                      await printResults({github, context, core, budgetFilePath: './lighthouse/performanceBudget.json'});
+            - run: docker-compose -f docker-compose-ui.yml down
+              if: always()
