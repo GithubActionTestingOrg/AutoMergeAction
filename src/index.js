@@ -63,7 +63,7 @@ export async function getPullRequest(num) {
 
 const updateBranch = async () => {
     if (!pullRequestArray.length) {
-        console.log('No pull request for update');
+        console.log('No pull request for update test');
         return;
     }
 
