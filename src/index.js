@@ -73,7 +73,7 @@ const updateBranch = async () => {
     const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
         owner: repoOwner,
         repo: repo,
-        ref: pullRequest.title
+        ref: pullRequest.id
     });
     console.log('checkStatus', checkStatus)
 
