@@ -12056,6 +12056,9 @@ async function getPullRequest(num) {
                 reviewRequests {
                     totalCount
                 }
+                checkSuite {
+                    status
+                }
             }
           }
         }`,
@@ -12065,7 +12068,6 @@ async function getPullRequest(num) {
         num,
       }
     )
-    console.log(result.repository.pullRequest);
     return result.repository.pullRequest
 };
 
@@ -12076,6 +12078,8 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
+
+    console.log('pullRequest', pullRequest);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
