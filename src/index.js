@@ -48,6 +48,7 @@ export async function getPullRequest(num) {
                 reviewRequests {
                     totalCount
                 }
+                CheckStatusState
             }
           }
         }`,
