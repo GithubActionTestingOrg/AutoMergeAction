@@ -58,10 +58,10 @@ export async function getPullRequest(num) {
         }
     );
 
-    const checkStatus = await await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs{?check_name,status,filter,per_page,page,app_id}', {
+    const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs{?check_name,status,filter,per_page,page,app_id}', {
         owner: repoOwner,
         repo: repo,
-        ref: num,
+        ref: result.repository.pullRequest.headRef,
       });
 
     return {
