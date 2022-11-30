@@ -12047,6 +12047,7 @@ async function getPullRequest(num) {
                 reviewDecision
                 state
                 body
+                viewerCanUpdate
                 reviews(first: 100) {
                    nodes {
                         state
@@ -12064,6 +12065,7 @@ async function getPullRequest(num) {
         num,
       }
     )
+    console.log(result.repository.pullRequest);
     return result.repository.pullRequest
 };
 
