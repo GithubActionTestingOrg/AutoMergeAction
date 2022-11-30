@@ -27,7 +27,7 @@ const getPullRequests = async () => {
 
 export async function getPullRequest(num) {
     const result = await octokit.graphql(
-      `query ($owner: String!, $repo: String!, $num: Int!) {
+        `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
                 id
@@ -48,17 +48,26 @@ export async function getPullRequest(num) {
                 reviewRequests {
                     totalCount
                 }
-                CheckStatusState
             }
           }
         }`,
-      {
+        {
+            owner: repoOwner,
+            repo: repo,
+            num,
+        }
+    );
+
+    const checkStatus = await await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs{?check_name,status,filter,per_page,page,app_id}', {
         owner: repoOwner,
         repo: repo,
         num,
-      }
-    )
-    return result.repository.pullRequest
+      });
+
+    return {
+        pullRequest: result.repository.pullRequest,
+        checkStatus: checkStatus.check_runs,
+    }
 };
 
 const updateBranch = async () => {
@@ -67,7 +76,10 @@ const updateBranch = async () => {
         return;
     }
 
-    const pullRequest = await getPullRequest(pullRequestArray[0].number);
+    const { pullRequest, checkStatus } = await getPullRequest(pullRequestArray[0].number);
+    
+
+    console.log('checkStatus', checkStatus);
 
     console.log('pullRequest', pullRequest);
 
