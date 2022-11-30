@@ -12040,22 +12040,13 @@ async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRefName
+                baseRef
                 number
-                merged
-                mergeable
                 reviewDecision
                 state
                 body
                 viewerCanUpdate
-                reviews(first: 100) {
-                   nodes {
-                        state
-                   }
-                }
-                reviewRequests {
-                    totalCount
-                }
+                commits
             }
           }
         }`,
