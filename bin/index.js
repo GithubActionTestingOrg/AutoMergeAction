@@ -12056,9 +12056,6 @@ async function getPullRequest(num) {
                 reviewRequests {
                     totalCount
                 }
-                checkSuite {
-                    status
-                }
             }
           }
         }`,
