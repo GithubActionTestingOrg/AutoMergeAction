@@ -58,13 +58,6 @@ export async function getPullRequest(num) {
         }
     );
 
-    const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
-        owner: repoOwner,
-        repo: repo,
-        ref: result.repository.pullRequest.title
-    });
-    console.log(checkStatus)
-
     return  result.repository.pullRequest
 };
 
@@ -77,7 +70,12 @@ const updateBranch = async () => {
     const  pullRequest = await getPullRequest(pullRequestArray[0].number);
     
 
-    // console.log('checkStatus', checkStatus);
+    const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
+        owner: repoOwner,
+        repo: repo,
+        ref: pullRequest.title
+    });
+    console.log('checkStatus', checkStatus)
 
     console.log('pullRequest', pullRequest);
 
