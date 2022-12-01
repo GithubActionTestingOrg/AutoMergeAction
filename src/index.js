@@ -36,7 +36,7 @@ export async function getPullRequest(num) {
                 reviewDecision
                 state
                 body
-                commits(last: 1) {
+                commits(last: 10) {
                     nodes {
                       commit {
                         checkSuites(last: 20)  {
