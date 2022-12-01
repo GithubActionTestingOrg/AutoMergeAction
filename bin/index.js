@@ -12069,7 +12069,6 @@ async function getPullRequest(num) {
                         }
                       }
                     }
-                  }
                 }
             }
           }
