@@ -38,7 +38,11 @@ export async function getPullRequest(num) {
                 body
                 commits(last: 1) {
                     nodes {
-                      commit
+                      commit {
+                        checkSuites {
+                            status
+                        }
+                      }
                     }
                 }
             }
