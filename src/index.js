@@ -74,7 +74,7 @@ const updateBranch = async () => {
     // });
     // console.log('checkStatus', checkStatus)
 
-    console.log('pullRequest', pullRequest.commits.nodes.commit.statusCheckRollup);
+    console.log('pullRequest', pullRequest.commits.nodes.commit);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
