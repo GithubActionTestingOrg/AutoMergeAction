@@ -12040,13 +12040,13 @@ async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRef
+                baseRef {}
                 number
                 reviewDecision
                 state
                 body
                 viewerCanUpdate
-                commits
+                commits (last: 1) {}
             }
           }
         }`,
@@ -12069,12 +12069,12 @@ const updateBranch = async () => {
     const  pullRequest = await getPullRequest(pullRequestArray[0].number);
     
 
-    const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
-        owner: repoOwner,
-        repo: repo,
-        ref: pullRequest.id
-    });
-    console.log('checkStatus', checkStatus)
+    // const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
+    //     owner: repoOwner,
+    //     repo: repo,
+    //     ref: pullRequest.id
+    // });
+    // console.log('checkStatus', checkStatus)
 
     console.log('pullRequest', pullRequest);
 
