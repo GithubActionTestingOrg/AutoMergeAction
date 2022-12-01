@@ -12040,13 +12040,13 @@ async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRef {}
+                baseRef {
+                    name
+                }
                 number
                 reviewDecision
                 state
                 body
-                viewerCanUpdate
-                commits (last: 1) {}
             }
           }
         }`,

@@ -39,8 +39,6 @@ export async function getPullRequest(num) {
                 reviewDecision
                 state
                 body
-                viewerCanUpdate
-                commits (last: 1) {}
             }
           }
         }`,
