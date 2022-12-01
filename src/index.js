@@ -39,7 +39,9 @@ export async function getPullRequest(num) {
                 commits(last: 10) {
                     nodes {
                       commit {
-                        status
+                        status {
+                            state
+                        }
                       }
                     }
                 }
