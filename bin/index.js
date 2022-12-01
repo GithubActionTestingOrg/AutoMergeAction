@@ -12047,11 +12047,7 @@ async function getPullRequest(num) {
                 commits(last: 10) {
                     nodes {
                       commit {
-                        checkSuites(last: 20)  {
-                            nodes {
-                                status
-                            }
-                        }
+                        status
                       }
                     }
                 }
