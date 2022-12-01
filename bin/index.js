@@ -12033,6 +12033,52 @@ const getPullRequests = async () => {
     return resp;
 };
 
+const QUERY = (/* unused pure expression or super */ null && (`query($owner: String!, $repo: String!, $pull_number: Int!) {
+    repository(owner: $owner, name:$repo) {
+      pullRequest(number:$pull_number) {
+        commits(last: 1) {
+          nodes {
+            commit {
+              checkSuites(first: 100) {
+                nodes {
+                  checkRuns(first: 100) {
+                    nodes {
+                      name
+                      conclusion
+                      permalink
+                    }
+                  }
+                }
+              }
+              status {
+                state
+                contexts {
+                  state
+                  targetUrl
+                  description
+                  context
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }`))
+  
+  async function getCombinedSuccess(num) {
+    const result = await octokit.graphql(query, {   owner: repoOwner,
+        repo: repo, num });
+    const [{ commit: lastCommit }] = result.repository.pullRequest.commits.nodes;
+  
+    const allChecksSuccess = [].concat(
+      ...lastCommit.checkSuites.nodes.map(node => node.checkRuns.nodes)
+    ).every(checkRun => checkRun.conclusion === "SUCCESS")
+    const allStatusesSuccess = lastCommit.status.contexts.every(status => status.state === "SUCCESS");
+  
+    return allStatusesSuccess || allChecksSuccess
+  }
+
 async function getPullRequest(num) {
     const result = await octokit.graphql(
         `query ($owner: String!, $repo: String!, $num: Int!) {
@@ -12042,34 +12088,6 @@ async function getPullRequest(num) {
                 title
                 number
                 reviewDecision
-                state
-                body
-                commits(last: 1) {
-                    nodes {
-                      commit {
-                        checkSuites(first: 100) {
-                          nodes {
-                            checkRuns(first: 100) {
-                              nodes {
-                                name
-                                conclusion
-                                permalink
-                              }
-                            }
-                          }
-                        }
-                        status {
-                          state
-                          contexts {
-                            state
-                            targetUrl
-                            description
-                            context
-                          }
-                        }
-                      }
-                    }
-                }
             }
           }
         }`,
@@ -12090,18 +12108,11 @@ const updateBranch = async () => {
     }
 
     const  pullRequest = await getPullRequest(pullRequestArray[0].number);
-    
-
-    // const checkStatus = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-suites{?app_id,check_name,per_page,page}', {
-    //     owner: repoOwner,
-    //     repo: repo,
-    //     ref: pullRequest.id
-    // });
-    // console.log('checkStatus', checkStatus)
 
     console.log('pullRequest', pullRequest.commits.nodes.commit);
     console.log('pullRequest', pullRequest);
-
+    const statuses = await getCombinedSuccess(pullRequestArray[0].number);
+    console.log('statuses', statuses);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
