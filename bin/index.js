@@ -12044,7 +12044,15 @@ async function getPullRequest(num) {
                 reviewDecision
                 state
                 body
-                mergeable
+                commits(last: 1) {
+                    nodes {
+                      commit {
+                        statusCheckRollup {
+                          state
+                        }
+                      }
+                    }
+                }
             }
           }
         }`,
