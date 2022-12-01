@@ -12044,14 +12044,32 @@ async function getPullRequest(num) {
                 reviewDecision
                 state
                 body
-                commits(last: 10) {
+                commits(last: 1) {
                     nodes {
                       commit {
+                        checkSuites(first: 100) {
+                          nodes {
+                            checkRuns(first: 100) {
+                              nodes {
+                                name
+                                conclusion
+                                permalink
+                              }
+                            }
+                          }
+                        }
                         status {
+                          state
+                          contexts {
                             state
+                            targetUrl
+                            description
+                            context
+                          }
                         }
                       }
                     }
+                  }
                 }
             }
           }
