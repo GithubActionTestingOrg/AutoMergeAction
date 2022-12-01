@@ -12082,7 +12082,7 @@ const updateBranch = async () => {
     // });
     // console.log('checkStatus', checkStatus)
 
-    console.log('pullRequest', pullRequest);
+    console.log('pullRequest', pullRequest.commits.nodes);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
