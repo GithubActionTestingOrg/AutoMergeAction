@@ -12040,13 +12040,11 @@ async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRef {
-                    name
-                }
                 number
                 reviewDecision
                 state
                 body
+                mergeable
             }
           }
         }`,
