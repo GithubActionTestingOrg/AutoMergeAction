@@ -92,6 +92,8 @@ const updateBranch = async () => {
     // console.log('checkStatus', checkStatus)
 
     console.log('pullRequest', pullRequest.commits.nodes.commit);
+    console.log('pullRequest', pullRequest);
+
 
     if (
         pullRequest.status === 'CONFLICTING' ||
