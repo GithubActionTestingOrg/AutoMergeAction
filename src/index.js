@@ -39,7 +39,7 @@ export async function getPullRequest(num) {
                 commits(last: 1) {
                     nodes {
                       commit {
-                        checkSuites(last: 1)  {
+                        checkSuites(last: 20)  {
                             nodes {
                                 status
                             }
