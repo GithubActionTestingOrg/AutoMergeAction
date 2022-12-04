@@ -71,10 +71,6 @@ export async function getPullRequest(num) {
                                       name
                                       conclusion
                                     }
-                                    ... on StatusContext {
-                                      context
-                                      state
-                                    }
                                   }
                                 }
                             }
