@@ -12049,13 +12049,6 @@ async function getPullRequest(num) {
                         }
                     }
                 }
-            },
-            branchProtectionRules(first: 10) {
-                nodes {
-                  requiredApprovingReviewCount
-                  requiredStatusCheckContexts
-                  pattern
-                }
             }
           }
         }`,
