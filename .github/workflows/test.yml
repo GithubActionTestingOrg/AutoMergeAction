@@ -6,8 +6,6 @@ on:
     workflow_dispatch:
     pull_request:
 
-permissions: write-all
-
 jobs:
     autoupdate:
         runs-on: ubuntu-latest
@@ -18,3 +16,5 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   head: "main"
+
+permissions: read-all
