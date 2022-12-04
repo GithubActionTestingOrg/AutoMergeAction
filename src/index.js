@@ -53,12 +53,16 @@ export async function getPullRequest(num) {
                 reviewDecision
                 commits(last: 1) {
                     nodes {
-                        commit
+                        commit {
+                            status
+                        }
                     }
                     totalCount
                     edges {
                         node {
-                            commit
+                            commit {
+                                status
+                            }
                         }
                     }      
                 }
