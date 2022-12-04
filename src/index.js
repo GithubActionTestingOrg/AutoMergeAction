@@ -64,7 +64,7 @@ const updateBranch = async () => {
     const testPR = Object.assign({}, pullRequest);
     console.log('testPR', testPR);
 
-    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/statuses{?per_page,page}', {
+    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/statuses', {
         owner: repoOwner,
         repo: repo,
         ref: testPR.commits.nodes[0].commit.oid
