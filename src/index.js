@@ -53,7 +53,7 @@ export async function getPullRequest(num) {
                 id
                 title
                 baseRef {
-                    BranchProtectionRule {
+                    branchProtectionRule {
                         requiredStatusCheckContexts
                     }
                 }
