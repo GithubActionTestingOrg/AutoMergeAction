@@ -12070,17 +12070,17 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs?conclusion=failure', {
+    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
         owner: repoOwner,
         repo: repo,
         ref: pullRequest.commits.nodes[0].commit.oid
     });
 
     console.log('commit', commit.data);
+    console.log('commit app', commit.data.app);
+    console.log('commit suite', commit.data.check_suite);
 
-    if (pullRequest) {
-        console.log('pullRequest', JSON.stringify(pullRequest, null, "\t"));
-    }
+
 
     if (
         pullRequest.status === 'CONFLICTING' ||
