@@ -12045,25 +12045,13 @@ async function getPullRequest(num) {
                 commits(last: 1) {
                     nodes {
                         commit {
-                            status {
-                                state
-                            }
-                        }
-                    }
-                    edges {
-                        node {
-                            commit {
-                                checkSuites(last: 1) {
-                                    edges {
-                                        node {
-                                            status
-                                            url
-                                        }
-                                    }
+                            checkSuites(last: 1) {
+                                nodes {
+                                    status
                                 }
                             }
                         }
-                    }      
+                    }
                 }
             }
           }
@@ -12087,9 +12075,7 @@ const updateBranch = async () => {
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
     if (pullRequest) {
-        console.log('pullRequest', JSON.stringify(pullRequest, 2));
-        // console.log('pullRequest commits', pullRequest.commits.nodes.commit.status.state);
-        // console.log('pullRequest edges', pullRequest.edges.node.commit.checkSuites.edges.node);
+        console.log('pullRequest', JSON.stringify(pullRequest, null, "\t"));
     }
 
     if (
