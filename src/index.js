@@ -25,23 +25,6 @@ const getPullRequests = async () => {
     return resp;
 };
 
-const QUERY = `query($owner: String!, $repo: String!, $pull_number: Int!){
-    BranchProtectionRule
-}`
-  
-  async function getCombinedSuccess(num) {
-    const result = await octokit.graphql(query, {   owner: repoOwner,
-        repo: repo, num });
-    const [{ commit: lastCommit }] = result.repository.pullRequest.commits.nodes;
-  
-    const allChecksSuccess = [].concat(
-      ...lastCommit.checkSuites.nodes.map(node => node.checkRuns.nodes)
-    ).every(checkRun => checkRun.conclusion === "SUCCESS")
-    const allStatusesSuccess = lastCommit.status.contexts.every(status => status.state === "SUCCESS");
-  
-    return allStatusesSuccess || allChecksSuccess
-  }
-
 export async function getPullRequest(num) {
     const result = await octokit.graphql(
         `query ($owner: String!, $repo: String!, $num: Int!) {
@@ -91,10 +74,8 @@ const updateBranch = async () => {
 
     const  pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    console.log('pullRequest', pullRequest.commits.nodes.commit);
-    console.log('pullRequest', pullRequest);
-    const statuses = await getCombinedSuccess(pullRequestArray[0].number);
-    console.log('statuses', statuses);
+    console.log('pullRequest', pullRequest.commits.nodes);
+    console.log('pullRequest', pullRequest.edges.nodes);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
