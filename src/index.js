@@ -64,7 +64,19 @@ export async function getPullRequest(num) {
                     nodes {
                         commit {
                             oid
-                            statusCheckRollup
+                            statusCheckRollup {
+                                contexts(first: 50) {
+                                  nodes {
+                                    ... on CheckRun {
+                                      name
+                                      conclusion
+                                    }
+                                    ... on StatusContext {
+                                      context
+                                      state
+                                    }
+                                  }
+                                }
                         }
                     }
                 }
