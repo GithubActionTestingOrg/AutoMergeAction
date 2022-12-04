@@ -52,7 +52,9 @@ export async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRef
+                baseRef {
+                    name
+                }
                 baseRefName
                 number
                 reviewDecision

@@ -12060,7 +12060,9 @@ async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRef
+                baseRef {
+                    name
+                }
                 baseRefName
                 number
                 reviewDecision
@@ -12102,7 +12104,7 @@ const updateBranch = async () => {
     //     branch: branch,
     //   })
 
-    console.log('commit', JSON.stringify(pullRequest, null, '\t'));
+    console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
     // console.log('protection', JSON.stringify(protection, null, '\t'));
 
 
