@@ -68,9 +68,9 @@ const updateBranch = async () => {
         ref: pullRequest.commits.nodes[0].commit.oid
     });
 
-    console.log('commit', commit.data);
-    console.log('commit app', commit.data.app);
-    console.log('commit suite', commit.data.check_suite);
+    console.log('commit', JSON.stringify(commit.data, null, '\t'));
+    console.log('commit app', commit.data.app[0]);
+    console.log('commit suite', commit.data.check_suite[0]);
 
 
 
