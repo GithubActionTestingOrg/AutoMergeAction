@@ -79,8 +79,8 @@ const updateBranch = async () => {
 
     if (pullRequest) {
         console.log('pullRequest', pullRequest);
-        console.log('pullRequest commits', pullRequest.commits.nodes.commit.status.state);
-        console.log('pullRequest edges', pullRequest.edges.node.commit.status.state);
+        // console.log('pullRequest commits', pullRequest.commits.nodes.commit.status.state);
+        console.log('pullRequest edges', pullRequest.edges.node.commit.checkSuites.edges.node.status);
     }
 
     if (
