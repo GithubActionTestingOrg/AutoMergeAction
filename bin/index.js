@@ -12049,6 +12049,13 @@ async function getPullRequest(num) {
                         }
                     }
                 }
+            },
+            branchProtectionRules(first: 10) {
+                nodes {
+                  requiredApprovingReviewCount
+                  requiredStatusCheckContexts
+                  pattern
+                }
             }
           }
         }`,
@@ -12058,22 +12065,7 @@ async function getPullRequest(num) {
             num,
         }
     );
-    const commit = await octokit.graphql( `query ($owner: String!, $repo: String!) {
-        repository(name: $repo, owner: $owner) {
-          branchProtectionRules(first: 10) {
-            nodes {
-              requiredApprovingReviewCount
-              requiredStatusCheckContexts
-              pattern
-            }
-          }
-        }
-        }`,
-        {
-          owner: repoOwner,
-          repo: repo,
-        });
-    console.log('commit', JSON.stringify(commit.data, null, '\t'));
+
     
     return  result.repository.pullRequest
 };
@@ -12096,6 +12088,8 @@ const updateBranch = async () => {
         return;
     }
     
+    console.log('commit', JSON.stringify(pullRequest, null, '\t'));
+
     try {
         await octokit.rest.pulls.updateBranch({
             owner: repoOwner,
