@@ -26,7 +26,7 @@ const getPullRequests = async () => {
 };
 
 async function getBranchRequiredRules() {
-    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!, $num: Int!) {
+    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
         repository(name: $repo, owner: $owner) {
           branchProtectionRules(first: 10) {
               nodes {
