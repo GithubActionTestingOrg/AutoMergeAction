@@ -90,7 +90,7 @@ const updateBranch = async () => {
     const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
         owner: repoOwner,
         repo: repo,
-        branch,
+        branch: branch,
       })
 
     console.log('commit', JSON.stringify(pullRequest, null, '\t'));
