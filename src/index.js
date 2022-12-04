@@ -48,11 +48,8 @@ export async function getPullRequest(num) {
                                 checkSuites(last: 1) {
                                     edges {
                                         node {
-                                            branch
                                             status
-                                            commit
                                             url
-                                            checkRuns(last: 10)
                                         }
                                     }
                                 }
