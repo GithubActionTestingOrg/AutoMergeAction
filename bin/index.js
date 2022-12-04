@@ -12072,6 +12072,7 @@ async function getPullRequest(num) {
                     nodes {
                         commit {
                             oid
+                            statusCheckRollup
                         }
                     }
                 }
@@ -12105,9 +12106,9 @@ const updateBranch = async () => {
     //     repo: repo,
     //     branch: branch,
     //   })
+    // console.log('protection', JSON.stringify(protection, null, '\t'));
 
     console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
-    // console.log('protection', JSON.stringify(protection, null, '\t'));
 
 
     if (
