@@ -42,12 +42,15 @@ export async function getPullRequest(num) {
                             }
                         }
                     }
-                    totalCount
                     edges {
                         node {
                             commit {
-                                status {
-                                    state
+                                checkSuites(last: 1) {
+                                    edges {
+                                        node {
+                                            status
+                                        }
+                                    }
                                 }
                             }
                         }
