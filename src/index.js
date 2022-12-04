@@ -41,6 +41,13 @@ export async function getPullRequest(num) {
                         }
                     }
                 }
+            },
+            branchProtectionRules(first: 10) {
+                nodes {
+                  requiredApprovingReviewCount
+                  requiredStatusCheckContexts
+                  pattern
+                }
             }
           }
         }`,
@@ -63,6 +70,8 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
+    console.log('commit', JSON.stringify(pullRequest, null, '\t'));
+
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
@@ -73,7 +82,7 @@ const updateBranch = async () => {
         return;
     }
     
-    console.log('commit', JSON.stringify(pullRequest, null, '\t'));
+    
 
     try {
         await octokit.rest.pulls.updateBranch({
