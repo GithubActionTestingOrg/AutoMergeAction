@@ -74,8 +74,8 @@ const updateBranch = async () => {
 
     const  pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    console.log('pullRequest', pullRequest.commits.nodes);
-    console.log('pullRequest', pullRequest.edges.nodes);
+    console.log('pullRequest', pullRequest.commits.nodes.commit);
+    console.log('pullRequest', pullRequest.edges.node);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
