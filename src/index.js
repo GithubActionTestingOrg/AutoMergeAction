@@ -87,13 +87,14 @@ const updateBranch = async () => {
 
     // console.log('commit', JSON.stringify(requiredRules, null, '\t'));
 
-    const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
-        owner: repoOwner,
-        repo: repo,
-        branch: branch,
-      })
+    // const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
+    //     owner: repoOwner,
+    //     repo: repo,
+    //     branch: branch,
+    //   })
 
-    console.log('commit', JSON.stringify(pullRequest, null, '\t'));
+    console.log(branch);
+    // console.log('commit', JSON.stringify(pullRequest, null, '\t'));
     console.log('protection', JSON.stringify(protection, null, '\t'));
 
 
