@@ -25,38 +25,9 @@ const getPullRequests = async () => {
     return resp;
 };
 
-const QUERY = `query($owner: String!, $repo: String!, $pull_number: Int!) {
-    repository(owner: $owner, name:$repo) {
-      pullRequest(number:$pull_number) {
-        commits(last: 1) {
-          nodes {
-            commit {
-              checkSuites(first: 100) {
-                nodes {
-                  checkRuns(first: 100) {
-                    nodes {
-                      name
-                      conclusion
-                      permalink
-                    }
-                  }
-                }
-              }
-              status {
-                state
-                contexts {
-                  state
-                  targetUrl
-                  description
-                  context
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }`
+const QUERY = `query($owner: String!, $repo: String!, $pull_number: Int!){
+    BranchProtectionRule
+}`
   
   async function getCombinedSuccess(num) {
     const result = await octokit.graphql(query, {   owner: repoOwner,
@@ -80,6 +51,11 @@ export async function getPullRequest(num) {
                 title
                 number
                 reviewDecision
+                commits(last: 1) {
+                    nodes
+                    totalCount
+                    edges           
+                }
             }
           }
         }`,
