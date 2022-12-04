@@ -37,8 +37,7 @@ export async function getPullRequest(num) {
                 commits(last: 1) {
                     nodes {
                         commit {
-                                oid
-                            }
+                            oid
                         }
                     }
                 }
