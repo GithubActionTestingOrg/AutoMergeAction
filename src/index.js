@@ -10,6 +10,18 @@ const headBranch = core.getInput('head');
     
 let pullRequestArray = [];
 
+const query =  `query ($owner: String!, $repo: String!) {
+    repository(name: $repo, owner: $owner) {
+      branchProtectionRules(first: 10) {
+        nodes {
+          requiredApprovingReviewCount
+          requiredStatusCheckContexts
+          pattern
+        }
+      }
+    }
+  }`
+
 const getPullRequests = async () => {
     const resp = octokit.rest.pulls.list({
         owner: repoOwner,
@@ -62,15 +74,23 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
-        owner: repoOwner,
-        repo: repo,
-        ref: pullRequest.commits.nodes[0].commit.oid
-    });
+    // const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
+    //     owner: repoOwner,
+    //     repo: repo,
+    //     ref: pullRequest.commits.nodes[0].commit.oid
+    // });
 
-    console.log('commit', JSON.stringify(commit.data, null, '\t'));
-    console.log('commit app', commit.data.app[0]);
-    console.log('commit suite', commit.data.check_suite[0]);
+    // console.log('commit', JSON.stringify(commit.data, null, '\t'));
+    // console.log('commit app', commit.data.app[0]);
+    // console.log('commit suite', commit.data.check_suite[0]);
+
+    const commit = await octokit.graphql(query,
+        {
+          owner: repoOwner,
+          repo: repo,
+        });
+    
+        console.log('commit', JSON.stringify(commit.data, null, '\t'));
 
 
 
