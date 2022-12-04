@@ -77,6 +77,7 @@ export async function getPullRequest(num) {
                                     }
                                   }
                                 }
+                            }
                         }
                     }
                 }
