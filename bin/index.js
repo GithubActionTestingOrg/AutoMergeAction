@@ -12069,6 +12069,14 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
+    const testPR = Object.assign({}, pullRequest);
+    console.log('testPR', testPR);
+
+    await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}{?page,per_page}', {
+        owner: repoOwner,
+        repo: repo,
+        ref: testPR.commits.nodes[0].commit.oid
+      })
 
     if (pullRequest) {
         console.log('pullRequest', JSON.stringify(pullRequest, null, "\t"));
