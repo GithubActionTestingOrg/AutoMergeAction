@@ -12083,10 +12083,11 @@ const updateBranch = async () => {
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
     if (pullRequest) {
-        console.log('pullRequest', pullRequest.commits.nodes.commit);
-        console.log('pullRequest', pullRequest.edges);
+        console.log('pullRequest', pullRequest);
+        console.log('pullRequest commits', pullRequest.commits.nodes.commit);
+        console.log('pullRequest edges', pullRequest.edges);
     }
-    
+
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
