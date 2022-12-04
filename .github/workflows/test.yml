@@ -1,12 +1,12 @@
 name: PR update
 
-permissions: read-all
-
 on:
     schedule:
         - cron: "* * * * *"
     workflow_dispatch:
     pull_request:
+
+permissions: read-all
 
 jobs:
     autoupdate:
