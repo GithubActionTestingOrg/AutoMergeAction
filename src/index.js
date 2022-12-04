@@ -3,6 +3,8 @@ const github = require('@actions/github');
 const { Octokit } = require("@octokit/rest");
 
 const token = core.getInput('token');
+const branch = core.getInput('branch');
+
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
@@ -85,11 +87,11 @@ const updateBranch = async () => {
 
     // console.log('commit', JSON.stringify(requiredRules, null, '\t'));
 
-    // await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
-    //     owner: repoOwner,
-    //     repo: repo,
-    //     num,
-    //   })
+    await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
+        owner: repoOwner,
+        repo: repo,
+        branch,
+      })
 
     console.log('commit', JSON.stringify(pullRequest, null, '\t'));
 
