@@ -16,4 +16,3 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   head: "main"
-                  branch: ${GITHUB_REF##*/}

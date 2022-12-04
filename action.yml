@@ -7,9 +7,6 @@ inputs:
     head:
         required: true
         description: "Your master branch"
-    branch:
-        required: true
-        description: "Current branch"
 
 runs:
     using: node12

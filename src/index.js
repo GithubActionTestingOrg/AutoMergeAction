@@ -3,7 +3,6 @@ const github = require('@actions/github');
 const { Octokit } = require("@octokit/rest");
 
 const token = core.getInput('token');
-const branch = core.getInput('branch');
 
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
@@ -53,6 +52,8 @@ export async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
+                baseRef
+                baseRefName
                 number
                 reviewDecision
                 commits(last: 1) {
@@ -93,9 +94,8 @@ const updateBranch = async () => {
     //     branch: branch,
     //   })
 
-    console.log(branch);
-    // console.log('commit', JSON.stringify(pullRequest, null, '\t'));
-    console.log('protection', JSON.stringify(protection, null, '\t'));
+    console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
+    // console.log('protection', JSON.stringify(protection, null, '\t'));
 
 
     if (
