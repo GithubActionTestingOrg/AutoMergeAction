@@ -54,14 +54,18 @@ export async function getPullRequest(num) {
                 commits(last: 1) {
                     nodes {
                         commit {
-                            status
+                            status {
+                                state
+                            }
                         }
                     }
                     totalCount
                     edges {
                         node {
                             commit {
-                                status
+                                status {
+                                    state
+                                }
                             }
                         }
                     }      
