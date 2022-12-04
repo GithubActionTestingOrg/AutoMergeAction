@@ -72,11 +72,13 @@ const updateBranch = async () => {
         return;
     }
 
-    const  pullRequest = await getPullRequest(pullRequestArray[0].number);
+    const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    console.log('pullRequest', pullRequest.commits.nodes.commit);
-    console.log('pullRequest', pullRequest.edges.node);
-
+    if (pullRequest) {
+        console.log('pullRequest', pullRequest.commits.nodes.commit);
+        console.log('pullRequest', pullRequest.edges);
+    }
+    
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
