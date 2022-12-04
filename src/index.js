@@ -27,20 +27,34 @@ const getPullRequests = async () => {
 
 export async function getPullRequest(num) {
     const result = await octokit.graphql(
-        `query ($owner: String!, $repo: String!) {
+        `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
+            pullRequest(number: $num) {
+                id
+                title
+                number
+                reviewDecision
+                commits(last: 1) {
+                    nodes {
+                        commit {
+                            oid
+                        }
+                    }
+                }
+            },
             branchProtectionRules(first: 10) {
                 nodes {
                   requiredApprovingReviewCount
                   requiredStatusCheckContexts
                   pattern
                 }
-            },
+            }
           }
         }`,
         {
             owner: repoOwner,
             repo: repo,
+            num,
         }
     );
 
@@ -55,8 +69,8 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
-
     console.log('commit', JSON.stringify(pullRequest, null, '\t'));
+
 
     if (
         pullRequest.status === 'CONFLICTING' ||
@@ -67,7 +81,6 @@ const updateBranch = async () => {
         updateBranch();
         return;
     }
-    
     
 
     try {

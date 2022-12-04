@@ -1,5 +1,7 @@
 name: PR update
 
+permissions: read-all
+
 on:
     schedule:
         - cron: "* * * * *"
