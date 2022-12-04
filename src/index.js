@@ -62,7 +62,7 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
 
-    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs', {
+    const commit = await octokit.request('GET /repos/{owner}/{repo}/commits/{ref}/check-runs?conclusion=failure', {
         owner: repoOwner,
         repo: repo,
         ref: pullRequest.commits.nodes[0].commit.oid
