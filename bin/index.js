@@ -12061,7 +12061,9 @@ async function getPullRequest(num) {
                 id
                 title
                 baseRef {
-                    name
+                    BranchProtectionRule {
+                        requiredStatusCheckContexts
+                    }
                 }
                 baseRefName
                 number
