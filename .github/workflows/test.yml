@@ -16,6 +16,3 @@ jobs:
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
                   head: "main"
-                  requiredChecks: |
-                      build (ubuntu-latest) (push)
-                      build (windows-latest) (push)

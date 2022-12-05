@@ -7,9 +7,6 @@ inputs:
     head:
         required: true
         description: "Your master branch"
-    requiredChecks:
-        required: true
-        description: "Required github checks"
 
 runs:
     using: node12
