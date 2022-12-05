@@ -10,7 +10,7 @@ jobs:
     autoupdate:
         runs-on: ubuntu-latest
         permissions:
-            Administration: read
+            administration: read
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
