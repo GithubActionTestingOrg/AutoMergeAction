@@ -60,23 +60,6 @@ export async function getPullRequest(num) {
                 baseRefName
                 number
                 reviewDecision
-                commits(last: 1) {
-                    nodes {
-                        commit {
-                            oid
-                            statusCheckRollup {
-                                contexts(first: 50) {
-                                  nodes {
-                                    ... on CheckRun {
-                                      name
-                                      conclusion
-                                    }
-                                  }
-                                }
-                            }
-                        }
-                    }
-                }
             }
           }
         }`,
@@ -102,12 +85,12 @@ const updateBranch = async () => {
 
     // console.log('commit', JSON.stringify(requiredRules, null, '\t'));
 
-    // const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
-    //     owner: repoOwner,
-    //     repo: repo,
-    //     branch: branch,
-    //   })
-    // console.log('protection', JSON.stringify(protection, null, '\t'));
+    const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
+        owner: repoOwner,
+        repo: repo,
+        branch: branch,
+      })
+    console.log('protection', JSON.stringify(protection, null, '\t'));
 
     console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
 
