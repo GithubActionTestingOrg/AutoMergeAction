@@ -12,6 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
+              permissions: read-all
               uses: ./
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
