@@ -13,6 +13,7 @@ jobs:
             statuses: read
             security-events: read
             checks: read
+            pull-requests: write
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
