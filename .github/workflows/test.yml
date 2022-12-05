@@ -9,10 +9,10 @@ on:
 jobs:
     autoupdate:
         runs-on: ubuntu-latest
-            permissions:
-              actions: read
-              contents: read
-              security-events: write
+        permissions:
+            actions: read
+            contents: read
+            security-events: write
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
