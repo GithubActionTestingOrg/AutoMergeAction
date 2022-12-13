@@ -12080,6 +12080,7 @@ async function getPullRequest(num) {
                         }
                       }
                     }
+                }
                 baseRefName
                 number
                 reviewDecision
