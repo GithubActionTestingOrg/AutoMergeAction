@@ -11,5 +11,5 @@ jobs:
             - name: update all prs
               uses: ./
               with:
-                  token: ${{ secrets.GITHUB_TOKEN }}
+                  token: ${{ secrets.ACTION_TOKEN }}
                   head: "main"
