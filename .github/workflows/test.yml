@@ -5,10 +5,11 @@ on: push
 jobs:
     autoupdate:
         runs-on: ubuntu-latest
+        permissions: write-all
         steps:
             - uses: actions/checkout@v3
             - name: update all prs
               uses: ./
               with:
-                  token: ${{ secrets.ACTION_TOKEN }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
                   head: "main"
