@@ -26,7 +26,7 @@ const getPullRequests = async () => {
     return resp;
 };
 
-async function getBranchRequiredRules() {
+async function getRepoRequiredRules() {
     const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
         repository(name: $repo, owner: $owner) {
           branchProtectionRules(first: 10) {
@@ -90,6 +90,10 @@ export async function getPullRequest(num) {
     return  result.repository.pullRequest
 };
 
+const checkRequiredActions = (repoRequiredRules, commitChecks) => {
+    console.log(commitChecks);
+}
+
 const updateBranch = async () => {
     if (!pullRequestArray.length) {
         console.log('No pull request for update');
@@ -97,17 +101,17 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
+    const repoRequiredRules = await getRepoRequiredRules();
 
-    // const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
-    //     owner: repoOwner,
-    //     repo: repo,
-    //     branch: branch,
-    //   })
-    // console.log('protection', JSON.stringify(protection, null, '\t'));
+
+    console.log('repoRequiredRules', JSON.stringify(repoRequiredRules, null, '\t'));
 
     console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
 
+    const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
 
+    const isChecksComplete = checkRequiredActions(repoRequiredRules, commitChecks);
+    
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
