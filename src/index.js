@@ -92,6 +92,7 @@ export async function getPullRequest(num) {
 
 const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     console.log(commitChecks);
+    console.log(repoRequiredRules);
 }
 
 const updateBranch = async () => {
@@ -102,7 +103,7 @@ const updateBranch = async () => {
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
     const getRequiredRules = await getRepoRequiredRules();
-    
+
     const repoRequiredRules = getRequiredRules.nodes[0].requiredStatusCheckContexts;
 
     console.log('repoRequiredRules', JSON.stringify(repoRequiredRules, null, '\t'));
