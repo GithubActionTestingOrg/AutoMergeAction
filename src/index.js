@@ -52,11 +52,26 @@ export async function getPullRequest(num) {
             pullRequest(number: $num) {
                 id
                 title
-                baseRef {
-                    branchProtectionRule {
-                        requiredStatusCheckContexts
+                commits(last: 1) {
+                    nodes {
+                      commit {
+                        statusCheckRollup {
+                          contexts(first: ${checkCount}) {
+                            nodes {
+                              ... on CheckRun {
+                                name
+                                conclusion
+                              }
+                              ... on StatusContext {
+                                context
+                                state
+                              }
+                            }
+                          }
+                          state
+                        }
+                      }
                     }
-                }
                 baseRefName
                 number
                 reviewDecision
