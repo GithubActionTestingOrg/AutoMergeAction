@@ -56,7 +56,7 @@ export async function getPullRequest(num) {
                     nodes {
                       commit {
                         statusCheckRollup {
-                          contexts(first: ${checkCount}) {
+                          contexts(first: 30) {
                             nodes {
                               ... on CheckRun {
                                 name
