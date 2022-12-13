@@ -12011,6 +12011,7 @@ const github = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(5375);
 
 const token = core.getInput('token');
+
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
@@ -12033,42 +12034,52 @@ const getPullRequests = async () => {
     return resp;
 };
 
+async function getBranchRequiredRules() {
+    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
+        repository(name: $repo, owner: $owner) {
+          branchProtectionRules(first: 10) {
+              nodes {
+                requiredStatusCheckContexts
+              }
+          }
+        }
+      }`,
+        {
+            owner: repoOwner,
+            repo: repo,
+        });
+    
+    return rules.repository.branchProtectionRules;
+}
+
+
 async function getPullRequest(num) {
     const result = await octokit.graphql(
-      `query ($owner: String!, $repo: String!, $num: Int!) {
+        `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
             pullRequest(number: $num) {
                 id
                 title
+                baseRef {
+                    branchProtectionRule {
+                        requiredStatusCheckContexts
+                    }
+                }
                 baseRefName
                 number
-                merged
-                mergeable
                 reviewDecision
-                state
-                body
-                viewerCanUpdate
-                reviews(first: 100) {
-                   nodes {
-                        state
-                   }
-                }
-                reviewRequests {
-                    totalCount
-                }
-                checkSuite {
-                    status
-                }
             }
           }
         }`,
-      {
-        owner: repoOwner,
-        repo: repo,
-        num,
-      }
-    )
-    return result.repository.pullRequest
+        {
+            owner: repoOwner,
+            repo: repo,
+            num,
+        }
+    );
+
+    
+    return  result.repository.pullRequest
 };
 
 const updateBranch = async () => {
@@ -12078,8 +12089,19 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
+    const requiredRules = await getBranchRequiredRules();
 
-    console.log('pullRequest', pullRequest);
+    console.log('commit', JSON.stringify(requiredRules, null, '\t'));
+
+    const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
+        owner: repoOwner,
+        repo: repo,
+        branch: branch,
+      })
+    console.log('protection', JSON.stringify(protection, null, '\t'));
+
+    console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
+
 
     if (
         pullRequest.status === 'CONFLICTING' ||
@@ -12091,18 +12113,19 @@ const updateBranch = async () => {
         return;
     }
     
-    try {
-        await octokit.rest.pulls.updateBranch({
-            owner: repoOwner,
-            repo: repo,
-            pull_number: pullRequestArray[0].number,
-        }).then(() => {
-            console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
-        });
-    } catch (error) {
-        pullRequestArray.shift();
-        updateBranch();
-    };
+
+    // try {
+    //     await octokit.rest.pulls.updateBranch({
+    //         owner: repoOwner,
+    //         repo: repo,
+    //         pull_number: pullRequestArray[0].number,
+    //     }).then(() => {
+    //         console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
+    //     });
+    // } catch (error) {
+    //     pullRequestArray.shift();
+    //     updateBranch();
+    // };
 };
 
 async function main() {
