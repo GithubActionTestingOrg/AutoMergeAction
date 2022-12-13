@@ -101,8 +101,9 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
-    const repoRequiredRules = await getRepoRequiredRules();
-
+    const getRequiredRules = await getRepoRequiredRules();
+    
+    const repoRequiredRules = getRequiredRules.nodes[0].requiredStatusCheckContexts;
 
     console.log('repoRequiredRules', JSON.stringify(repoRequiredRules, null, '\t'));
 
