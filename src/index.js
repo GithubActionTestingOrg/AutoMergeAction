@@ -26,23 +26,23 @@ const getPullRequests = async () => {
     return resp;
 };
 
-// async function getBranchRequiredRules() {
-//     const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
-//         repository(name: $repo, owner: $owner) {
-//           branchProtectionRules(first: 10) {
-//               nodes {
-//                 requiredStatusCheckContexts
-//               }
-//           }
-//         }
-//       }`,
-//         {
-//             owner: repoOwner,
-//             repo: repo,
-//         });
+async function getBranchRequiredRules() {
+    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
+        repository(name: $repo, owner: $owner) {
+          branchProtectionRules(first: 10) {
+              nodes {
+                requiredStatusCheckContexts
+              }
+          }
+        }
+      }`,
+        {
+            owner: repoOwner,
+            repo: repo,
+        });
     
-//     return rules.repository.branchProtectionRules;
-// }
+    return rules.repository.branchProtectionRules;
+}
 
 
 export async function getPullRequest(num) {
@@ -81,16 +81,16 @@ const updateBranch = async () => {
     }
 
     const pullRequest = await getPullRequest(pullRequestArray[0].number);
-    // const requiredRules = await getBranchRequiredRules();
+    const requiredRules = await getBranchRequiredRules();
 
-    // console.log('commit', JSON.stringify(requiredRules, null, '\t'));
+    console.log('commit', JSON.stringify(requiredRules, null, '\t'));
 
-    // const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
-    //     owner: repoOwner,
-    //     repo: repo,
-    //     branch: branch,
-    //   })
-    // console.log('protection', JSON.stringify(protection, null, '\t'));
+    const protection = await octokit.request('GET /repos/{owner}/{repo}/branches/{branch}/protection', {
+        owner: repoOwner,
+        repo: repo,
+        branch: branch,
+      })
+    console.log('protection', JSON.stringify(protection, null, '\t'));
 
     console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
 
@@ -106,18 +106,18 @@ const updateBranch = async () => {
     }
     
 
-    try {
-        await octokit.rest.pulls.updateBranch({
-            owner: repoOwner,
-            repo: repo,
-            pull_number: pullRequestArray[0].number,
-        }).then(() => {
-            console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
-        });
-    } catch (error) {
-        pullRequestArray.shift();
-        updateBranch();
-    };
+    // try {
+    //     await octokit.rest.pulls.updateBranch({
+    //         owner: repoOwner,
+    //         repo: repo,
+    //         pull_number: pullRequestArray[0].number,
+    //     }).then(() => {
+    //         console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
+    //     });
+    // } catch (error) {
+    //     pullRequestArray.shift();
+    //     updateBranch();
+    // };
 };
 
 async function main() {
