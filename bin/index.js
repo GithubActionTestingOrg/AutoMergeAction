@@ -12037,7 +12037,7 @@ const getPullRequests = async () => {
 async function getRepoRequiredRules() {
     const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
         repository(name: $repo, owner: $owner) {
-          branchProtectionRules(first: 10) {
+          branchProtectionRules(last: 1) {
               nodes {
                 requiredStatusCheckContexts
               }
@@ -12119,7 +12119,7 @@ const updateBranch = async () => {
     const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
 
     const isChecksComplete = checkRequiredActions(repoRequiredRules, commitChecks);
-    
+
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision)
