@@ -12038,6 +12038,9 @@ async function getPullRequest(octokit, num) {
 const github = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(5375);
 
+const core = __nccwpck_require__(2186);
+const token = core.getInput('token');
+
 const octokit = new Octokit({ auth: token });
 const checksRules_repoOwner = github.context.repo.owner
 const checksRules_repo = github.context.repo.repo
@@ -12077,17 +12080,17 @@ const checkRequiredActions = async (pullRequest) => {
 
 
 l
-const core = __nccwpck_require__(2186);
+const src_core = __nccwpck_require__(2186);
 const src_github = __nccwpck_require__(5438);
 const { Octokit: src_Octokit } = __nccwpck_require__(5375);
 
-const src_token = core.getInput('token');
-const isDebugMode = core.getInput('isDebug');
+const src_token = src_core.getInput('token');
+const isDebugMode = src_core.getInput('isDebug');
 
 const src_octokit = new src_Octokit({ auth: src_token });
 const src_repoOwner = src_github.context.repo.owner
 const src_repo = src_github.context.repo.repo
-const headBranch = core.getInput('head'); 
+const headBranch = src_core.getInput('head'); 
     
 let pullRequestArray = [];
 
@@ -12100,7 +12103,7 @@ const getPullRequests = async () => {
         base: headBranch,
     }).catch(
         e => {
-            core.setFailed(e.message)
+            src_core.setFailed(e.message)
         }
     )
     return resp;

@@ -1,6 +1,9 @@
 const github = require('@actions/github');
 const { Octokit } = require("@octokit/rest");
 
+const core = require('@actions/core');
+const token = core.getInput('token');
+
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
 const repo = github.context.repo.repo
