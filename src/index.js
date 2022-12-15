@@ -118,6 +118,8 @@ const updateBranch = async () => {
 
     const isChecksComplete = checkRequiredActions(repoRequiredRules, commitChecks);
 
+    console.log('isChecksComplete', isChecksComplete);
+
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision) ||
