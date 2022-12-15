@@ -37,7 +37,7 @@ const updateBranch = async () => {
         return;
     }
     const pullRequest = await getPullRequest(octokit, pullRequestArray[0].number, repoOwner, repo);
-    const isChecksSuccess = checkRequiredActions(octokit, pullRequest, repoOwner, repo);
+    const isChecksSuccess = await checkRequiredActions(octokit, pullRequest, repoOwner, repo);
 
     console.log('isChecksSuccess', isChecksSuccess);
 
