@@ -12108,7 +12108,7 @@ const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     }).filter((elem) => elem !== undefined);
     console.log('statusOfRequiredChecks', statusOfRequiredChecks);
 
-    return statusOfRequiredChecks.includes('FAILURE');
+    return !statusOfRequiredChecks.includes('FAILURE');
 }
 
 const updateBranch = async () => {
@@ -12124,14 +12124,14 @@ const updateBranch = async () => {
 
     const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
 
-    const isChecksComplete = checkRequiredActions(repoRequiredRules, commitChecks);
+    const isChecksSuccess = checkRequiredActions(repoRequiredRules, commitChecks);
 
-    console.log('isChecksComplete', isChecksComplete);
+    console.log('isChecksSuccess', isChecksSuccess);
 
     if (
         pullRequest.status === 'CONFLICTING' ||
         ['CHANGES_REQUESTED', 'REVIEW_REQUIRED'].includes(pullRequest.reviewDecision) ||
-        isChecksComplete === false
+        isChecksSuccess === false
     ) {
         console.log(`Pull request  №${pullRequest.number} can not be merged`);
         pullRequestArray.shift();
