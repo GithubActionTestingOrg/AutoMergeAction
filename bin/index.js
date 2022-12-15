@@ -12058,6 +12058,10 @@ const checkRequiredActions = async (octokit, pullRequest, repoOwner, repo ) => {
     const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
     const repoRequiredRules = requiredRules.nodes[0].requiredStatusCheckContexts;
 
+    console.log('commitChecks', commitChecks);
+    console.log('repoRequiredRules', repoRequiredRules);
+
+
     const statusOfRequiredChecks = commitChecks.map((key) => {
         if (repoRequiredRules.indexOf(key.name) != -1) return key.conclusion;
     }).filter((elem) => elem !== undefined);
