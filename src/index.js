@@ -97,7 +97,7 @@ const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     const statusOfRequiredChecks = commitChecks.map((key) => {
         if (repoRequiredRules.indexOf(key.name) != 1) return key.conclusion;
         return
-    });
+    }).filter((elem) => elem !== undefined);
     console.log('statusOfRequiredChecks', statusOfRequiredChecks);
 }
 
