@@ -93,6 +93,9 @@ export async function getPullRequest(num) {
 const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     console.log(commitChecks);
     console.log(repoRequiredRules);
+
+    const statusOfRequiredChecks = Object.keys(commitChecks);
+    console.log('statusOfRequiredChecks', statusOfRequiredChecks);
 }
 
 const updateBranch = async () => {
@@ -105,10 +108,6 @@ const updateBranch = async () => {
     const getRequiredRules = await getRepoRequiredRules();
 
     const repoRequiredRules = getRequiredRules.nodes[0].requiredStatusCheckContexts;
-
-    console.log('repoRequiredRules', JSON.stringify(repoRequiredRules, null, '\t'));
-
-    console.log('pullRequest', JSON.stringify(pullRequest, null, '\t'));
 
     const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
 
