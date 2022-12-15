@@ -11965,23 +11965,6 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -12002,60 +11985,11 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
 "use strict";
+// ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
-/* harmony export */ __nccwpck_require__.d(__webpack_exports__, {
-/* harmony export */   "getPullRequest": () => (/* binding */ getPullRequest)
-/* harmony export */ });
-const core = __nccwpck_require__(2186);
-const github = __nccwpck_require__(5438);
-const { Octokit } = __nccwpck_require__(5375);
 
-const token = core.getInput('token');
-const isDebugMode = core.getInput('isDebug');
-
-
-const octokit = new Octokit({ auth: token });
-const repoOwner = github.context.repo.owner
-const repo = github.context.repo.repo
-const headBranch = core.getInput('head'); 
-    
-let pullRequestArray = [];
-
-const getPullRequests = async () => {
-    const resp = octokit.rest.pulls.list({
-        owner: repoOwner,
-        repo: repo,
-        sort: 'long-running',
-        direction: 'desc',
-        base: headBranch,
-    }).catch(
-        e => {
-            core.setFailed(e.message)
-        }
-    )
-    return resp;
-};
-
-async function getRepoRequiredRules() {
-    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
-        repository(name: $repo, owner: $owner) {
-          branchProtectionRules(last: 1) {
-              nodes {
-                requiredStatusCheckContexts
-              }
-          }
-        }
-      }`,
-        {
-            owner: repoOwner,
-            repo: repo,
-        });
-    
-    return rules.repository.branchProtectionRules;
-}
-
-
-async function getPullRequest(num) {
+;// CONCATENATED MODULE: ./src/pullRequest.js
+async function getPullRequest(octokit, num, repoOwner, repo) {
     const result = await octokit.graphql(
         `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {
@@ -12099,10 +12033,30 @@ async function getPullRequest(num) {
     
     return  result.repository.pullRequest
 };
+;// CONCATENATED MODULE: ./src/checksRules.js
+async function getRepoRequiredRules(octokit, repoOwner, repo) {
+    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
+        repository(name: $repo, owner: $owner) {
+          branchProtectionRules(last: 1) {
+              nodes {
+                requiredStatusCheckContexts
+              }
+          }
+        }
+      }`,
+        {
+            owner: repoOwner,
+            repo: repo,
+        });
+    
+    return rules.repository.branchProtectionRules;
+}
 
-const checkRequiredActions = (repoRequiredRules, commitChecks) => {
-    console.log(commitChecks);
-    console.log(repoRequiredRules);
+
+const checkRequiredActions = async (octokit, pullRequest, repoOwner, repo ) => {
+    const requiredRules = await getRepoRequiredRules(octokit, repoOwner, repo);
+    const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
+    const repoRequiredRules = requiredRules.nodes[0].requiredStatusCheckContexts;
 
     const statusOfRequiredChecks = commitChecks.map((key) => {
         if (repoRequiredRules.indexOf(key.name) != -1) return key.conclusion;
@@ -12111,20 +12065,47 @@ const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     return !statusOfRequiredChecks.includes('FAILURE');
 }
 
+;// CONCATENATED MODULE: ./src/index.js
+
+
+
+const core = __nccwpck_require__(2186);
+const github = __nccwpck_require__(5438);
+const { Octokit } = __nccwpck_require__(5375);
+
+const token = core.getInput('token');
+const isDebugMode = core.getInput('isDebug');
+
+const octokit = new Octokit({ auth: token });
+const repoOwner = github.context.repo.owner
+const repo = github.context.repo.repo
+const headBranch = core.getInput('head'); 
+    
+let pullRequestArray = [];
+
+const getPullRequests = async () => {
+    const resp = octokit.rest.pulls.list({
+        owner: repoOwner,
+        repo: repo,
+        sort: 'long-running',
+        direction: 'desc',
+        base: headBranch,
+    }).catch(
+        e => {
+            core.setFailed(e.message)
+        }
+    )
+    return resp;
+};
+
+
 const updateBranch = async () => {
     if (!pullRequestArray.length) {
         console.log('No pull request for update');
         return;
     }
-
-    const pullRequest = await getPullRequest(pullRequestArray[0].number);
-    const getRequiredRules = await getRepoRequiredRules();
-
-    const repoRequiredRules = getRequiredRules.nodes[0].requiredStatusCheckContexts;
-
-    const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
-
-    const isChecksSuccess = checkRequiredActions(repoRequiredRules, commitChecks);
+    const pullRequest = await getPullRequest(octokit, pullRequestArray[0].number, repoOwner, repo);
+    const isChecksSuccess = await checkRequiredActions(octokit, pullRequest, repoOwner, repo);
 
     console.log('isChecksSuccess', isChecksSuccess);
 
@@ -12139,7 +12120,7 @@ const updateBranch = async () => {
         return;
     }
     
-    if(isDebugMode) return
+    if (isDebugMode) return;
 
     try {
         await octokit.rest.pulls.updateBranch({
