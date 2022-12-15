@@ -1,5 +1,4 @@
-
-export async function getPullRequest(octokit, num) {
+export async function getPullRequest(octokit, num, repoOwner, repo) {
     const result = await octokit.graphql(
         `query ($owner: String!, $repo: String!, $num: Int!) {
           repository(name: $repo, owner: $owner) {

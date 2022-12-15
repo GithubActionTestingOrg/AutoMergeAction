@@ -36,9 +36,8 @@ const updateBranch = async () => {
         console.log('No pull request for update');
         return;
     }
-    const pullRequest = await getPullRequest(octokit, pullRequestArray[0].number);
- 
-    const isChecksSuccess = checkRequiredActions(pullRequest, repoRequiredRules, commitChecks);
+    const pullRequest = await getPullRequest(octokit, pullRequestArray[0].number, repoOwner, repo);
+    const isChecksSuccess = checkRequiredActions(octokit, pullRequest, repoOwner, rep);
 
     console.log('isChecksSuccess', isChecksSuccess);
 
@@ -53,7 +52,7 @@ const updateBranch = async () => {
         return;
     }
     
-    if(isDebugMode) return
+    if (isDebugMode) return;
 
     try {
         await octokit.rest.pulls.updateBranch({

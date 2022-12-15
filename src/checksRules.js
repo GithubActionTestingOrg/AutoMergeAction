@@ -1,14 +1,4 @@
-const github = require('@actions/github');
-const { Octokit } = require("@octokit/rest");
-
-const core = require('@actions/core');
-const token = core.getInput('token');
-
-const octokit = new Octokit({ auth: token });
-const repoOwner = github.context.repo.owner
-const repo = github.context.repo.repo
-
-async function getRepoRequiredRules() {
+async function getRepoRequiredRules(octokit, repoOwner, repo) {
     const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
         repository(name: $repo, owner: $owner) {
           branchProtectionRules(last: 1) {
@@ -27,8 +17,8 @@ async function getRepoRequiredRules() {
 }
 
 
-export const checkRequiredActions = async (pullRequest) => {
-    const requiredRules = await getRepoRequiredRules();
+export const checkRequiredActions = async (octokit, pullRequest, repoOwner, repo ) => {
+    const requiredRules = await getRepoRequiredRules(octokit, repoOwner, repo);
     const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
     const repoRequiredRules = requiredRules.nodes[0].requiredStatusCheckContexts;
 
