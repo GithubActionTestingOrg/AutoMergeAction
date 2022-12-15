@@ -12102,7 +12102,7 @@ const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     console.log(commitChecks);
     console.log(repoRequiredRules);
 
-    const statusOfRequiredChecks = Object.keys(commitChecks);
+    const statusOfRequiredChecks = commitChecks.map((key) => repoRequiredRules.indexOf(key.name) != 1);
     console.log('statusOfRequiredChecks', statusOfRequiredChecks);
 }
 
