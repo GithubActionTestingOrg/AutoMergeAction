@@ -1,10 +1,12 @@
+import { getPullRequest } from './pullRequest';
+import { checkRequiredActions } from './checksRules';
+l
 const core = require('@actions/core');
 const github = require('@actions/github');
 const { Octokit } = require("@octokit/rest");
 
 const token = core.getInput('token');
 const isDebugMode = core.getInput('isDebug');
-
 
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
@@ -28,95 +30,15 @@ const getPullRequests = async () => {
     return resp;
 };
 
-async function getRepoRequiredRules() {
-    const rules = await octokit.graphql(`query ($owner: String!, $repo: String!) {
-        repository(name: $repo, owner: $owner) {
-          branchProtectionRules(last: 1) {
-              nodes {
-                requiredStatusCheckContexts
-              }
-          }
-        }
-      }`,
-        {
-            owner: repoOwner,
-            repo: repo,
-        });
-    
-    return rules.repository.branchProtectionRules;
-}
-
-
-export async function getPullRequest(num) {
-    const result = await octokit.graphql(
-        `query ($owner: String!, $repo: String!, $num: Int!) {
-          repository(name: $repo, owner: $owner) {
-            pullRequest(number: $num) {
-                id
-                title
-                commits(last: 1) {
-                    nodes {
-                      commit {
-                        statusCheckRollup {
-                          contexts(first: 30) {
-                            nodes {
-                              ... on CheckRun {
-                                name
-                                conclusion
-                              }
-                              ... on StatusContext {
-                                context
-                                state
-                              }
-                            }
-                          }
-                          state
-                        }
-                      }
-                    }
-                }
-                baseRefName
-                number
-                reviewDecision
-            }
-          }
-        }`,
-        {
-            owner: repoOwner,
-            repo: repo,
-            num,
-        }
-    );
-
-    
-    return  result.repository.pullRequest
-};
-
-const checkRequiredActions = (repoRequiredRules, commitChecks) => {
-    console.log(commitChecks);
-    console.log(repoRequiredRules);
-
-    const statusOfRequiredChecks = commitChecks.map((key) => {
-        if (repoRequiredRules.indexOf(key.name) != -1) return key.conclusion;
-    }).filter((elem) => elem !== undefined);
-
-    return !statusOfRequiredChecks.includes('FAILURE');
-}
 
 const updateBranch = async () => {
     if (!pullRequestArray.length) {
         console.log('No pull request for update');
         return;
     }
-
-    const pullRequest = await getPullRequest(pullRequestArray[0].number);
-    const getRequiredRules = await getRepoRequiredRules();
-
-    const repoRequiredRules = getRequiredRules.nodes[0].requiredStatusCheckContexts;
-
-    const commitChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup.contexts.nodes;
-
-    const isChecksSuccess = checkRequiredActions(repoRequiredRules, commitChecks);
+    const pullRequest = await getPullRequest(octokit, pullRequestArray[0].number);
+ 
+    const isChecksSuccess = checkRequiredActions(pullRequest, repoRequiredRules, commitChecks);
 
     console.log('isChecksSuccess', isChecksSuccess);
 
