@@ -12068,7 +12068,7 @@ const checkRequiredActions = async (octokit, pullRequest, repoOwner, repo ) => {
 ;// CONCATENATED MODULE: ./src/index.js
 
 
-l
+
 const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(5375);
