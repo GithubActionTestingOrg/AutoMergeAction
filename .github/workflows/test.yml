@@ -13,3 +13,4 @@ jobs:
               with:
                   token: ${{ secrets.ACTION_TOKEN }}
                   head: "main"
+                  isDebug: true

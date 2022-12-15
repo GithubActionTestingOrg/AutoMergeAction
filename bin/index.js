@@ -12011,6 +12011,8 @@ const github = __nccwpck_require__(5438);
 const { Octokit } = __nccwpck_require__(5375);
 
 const token = core.getInput('token');
+const isDebugMode = core.getInput('isDebug');
+
 
 const octokit = new Octokit({ auth: token });
 const repoOwner = github.context.repo.owner
@@ -12104,9 +12106,7 @@ const checkRequiredActions = (repoRequiredRules, commitChecks) => {
 
     const statusOfRequiredChecks = commitChecks.map((key) => {
         if (repoRequiredRules.indexOf(key.name) != -1) return key.conclusion;
-        return
     }).filter((elem) => elem !== undefined);
-    console.log('statusOfRequiredChecks', statusOfRequiredChecks);
 
     return !statusOfRequiredChecks.includes('FAILURE');
 }
@@ -12139,19 +12139,20 @@ const updateBranch = async () => {
         return;
     }
     
+    if(isDebugMode) return
 
-    // try {
-    //     await octokit.rest.pulls.updateBranch({
-    //         owner: repoOwner,
-    //         repo: repo,
-    //         pull_number: pullRequestArray[0].number,
-    //     }).then(() => {
-    //         console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
-    //     });
-    // } catch (error) {
-    //     pullRequestArray.shift();
-    //     updateBranch();
-    // };
+    try {
+        await octokit.rest.pulls.updateBranch({
+            owner: repoOwner,
+            repo: repo,
+            pull_number: pullRequestArray[0].number,
+        }).then(() => {
+            console.log(`Pull request  №${ pullRequestArray[0].number} has been updated`);
+        });
+    } catch (error) {
+        pullRequestArray.shift();
+        updateBranch();
+    };
 };
 
 async function main() {
