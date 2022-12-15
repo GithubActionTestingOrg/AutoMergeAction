@@ -94,7 +94,10 @@ const checkRequiredActions = (repoRequiredRules, commitChecks) => {
     console.log(commitChecks);
     console.log(repoRequiredRules);
 
-    const statusOfRequiredChecks = commitChecks.map((key) => repoRequiredRules.indexOf(key.name) != 1);
+    const statusOfRequiredChecks = commitChecks.map((key) => {
+        if (repoRequiredRules.indexOf(key.name) != 1) return key.conclusion;
+        
+    });
     console.log('statusOfRequiredChecks', statusOfRequiredChecks);
 }
 
